@@ -1,0 +1,51 @@
+apiVersion: routetable.upjet-provider-outscale.upbound.io/v1alpha1
+kind: RouteTableLink
+metadata:
+  name: routetablelink-public
+  namespace: default
+spec:
+  forProvider:
+    subnetIdRef:
+      name: subnet-public
+    routeTableIdRef:
+      name: routetable-public
+  providerConfigRef:
+    name: default
+---
+apiVersion: routetable.upjet-provider-outscale.upbound.io/v1alpha1
+kind: RouteTableLink
+metadata:
+  name: routetablelink-private
+  namespace: default
+spec:
+  forProvider:
+    subnetIdRef:
+      name: subnet-private
+    routeTableIdRef:
+      name: routetable-private
+  providerConfigRef:
+    name: default
+---
+apiVersion: routetable.upjet-provider-outscale.upbound.io/v1alpha1
+kind: RouteTable
+metadata:
+  name: routetable-public
+  namespace: default
+spec:
+  forProvider:
+    netIdRef: 
+      name: net
+  providerConfigRef:
+    name: default 
+---
+apiVersion: routetable.upjet-provider-outscale.upbound.io/v1alpha1
+kind: RouteTable
+metadata:
+  name: routetable-private
+  namespace: default
+spec:
+  forProvider:
+    netIdRef: 
+      name: net
+  providerConfigRef:
+    name: default 

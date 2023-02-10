@@ -1,0 +1,13 @@
+apiVersion: subnet.upjet-provider-outscale.upbound.io/v1alpha1
+kind: Subnet
+metadata:
+  name: main
+  namespace: default
+spec:
+  forProvider:
+    ipRange: "10.0.0.0/24"
+    subregionName: "eu-west-2a"
+    netIdRef: 
+      name: main
+  providerConfigRef:
+    name: default 

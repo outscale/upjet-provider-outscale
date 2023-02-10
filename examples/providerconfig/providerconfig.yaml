@@ -1,4 +1,4 @@
-apiVersion: template.upbound.io/v1beta1
+apiVersion: upjet-provider-outscale.upbound.io/v1beta1
 kind: ProviderConfig
 metadata:
   name: default
@@ -9,3 +9,8 @@ spec:
       name: example-creds
       namespace: crossplane-system
       key: credentials
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: crossplane-system

@@ -1,0 +1,15 @@
+apiVersion: volume.upjet-provider-outscale.upbound.io/v1alpha1
+kind: Volume
+metadata:
+  name: volume
+  namespace: default
+spec:
+  forProvider:
+    size: 30
+    subregionName: "eu-west-2a"
+    volumeType: "gp2"
+    tags:
+      - key: Name
+        value: volume
+  providerConfigRef:
+    name: default 

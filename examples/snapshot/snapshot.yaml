@@ -1,0 +1,30 @@
+apiVersion: snapshot.upjet-provider-outscale.upbound.io/v1alpha1
+kind: Snapshot
+metadata:
+  name: snap
+  namespace: default
+spec:
+  forProvider:
+    description: "my-snap"
+    volumeIdRef:
+      name: volume
+    tags:
+      - key: Name
+        value: snap
+  providerConfigRef:
+    name: default 
+---
+apiVersion: snapshot.upjet-provider-outscale.upbound.io/v1alpha1
+kind: SnapshotAttributes
+metadata:
+  name: snapattribute
+  namespace: default
+spec:
+  forProvider:
+    permissionsToCreateVolumeAdditions:
+      - accountIds:
+        - "027440686109"
+    snapshotIdRef:
+      name: snap
+  providerConfigRef:
+    name: default 

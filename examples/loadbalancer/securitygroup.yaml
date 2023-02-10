@@ -1,0 +1,37 @@
+apiVersion: securitygroup.upjet-provider-outscale.upbound.io/v1alpha1
+kind: SecurityGroup
+metadata:
+  name: sgpublic
+  namespace: default
+  labels: 
+    name: sgpublic
+spec:
+  forProvider:
+    securityGroupName: "sgpublic"
+    description: "sgpublic"
+    netIdRef: 
+      name: net
+    tags: 
+      - key: Name
+        value: sgpublic
+  providerConfigRef:
+    name: default 
+---
+apiVersion: securitygroup.upjet-provider-outscale.upbound.io/v1alpha1
+kind: SecurityGroup
+metadata:
+  name: sgprivate
+  namespace: default
+  labels: 
+    name: sgprivate
+spec:
+  forProvider:
+    securityGroupName: "sgprivate"
+    description: "sgprivate"
+    netIdRef: 
+      name: net
+    tags: 
+      - key: Name
+        value: sgprivate
+  providerConfigRef:
+    name: default 

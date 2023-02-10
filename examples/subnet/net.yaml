@@ -1,0 +1,10 @@
+apiVersion: net.upjet-provider-outscale.upbound.io/v1alpha1
+kind: Net
+metadata:
+  name: main
+  namespace: default
+spec:
+  forProvider:
+    ipRange: "10.0.0.0/16"
+  providerConfigRef:
+    name: default

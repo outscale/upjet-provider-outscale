@@ -1,0 +1,61 @@
+apiVersion: securitygroup.upjet-provider-outscale.upbound.io/v1alpha1
+kind: SecurityGroupRule
+metadata:
+  name: sg-rule-public-inbound
+  namespace: default
+spec:
+  forProvider:
+    flow: "Inbound"
+    rules:
+      - fromPortRange: 8080
+        toPortRange: 8080
+        ipProtocol: "tcp"
+        ipRanges: 
+        - "0.0.0.0/0"
+    securityGroupIdRef:
+      name: sgpublic
+  providerConfigRef:
+    name: default
+---
+apiVersion: securitygroup.upjet-provider-outscale.upbound.io/v1alpha1
+kind: SecurityGroupRule
+metadata:
+  name: sg-rule-public-outbound
+  namespace: default
+spec:
+  forProvider:
+    flow: "Outbound"
+    rules:   
+      - fromPortRange: 8080
+        toPortRange: 8080
+        ipProtocol: "tcp"
+        securityGroupsMembers:
+        - securityGroupId: "sg-8616e1cd" 
+    securityGroupIdRef:
+      name: sgpublic
+  providerConfigRef:
+    name: default
+---
+apiVersion: securitygroup.upjet-provider-outscale.upbound.io/v1alpha1
+kind: SecurityGroupRule
+metadata:
+  name: sg-rule-private
+  namespace: default
+spec:
+  forProvider:
+    flow: "Inbound"
+    rules:
+      - fromPortRange: 8080
+        toPortRange: 8080
+        ipProtocol: "tcp"
+        ipRanges: 
+        - "0.0.0.0/0" 
+      - fromPortRange: 8080
+        toPortRange: 8080
+        ipProtocol: "tcp"
+        securityGroupsMembers:
+          - securityGroupId: "sg-e2dc96cf"    
+    securityGroupIdRef:
+      name: sgprivate
+  providerConfigRef:
+    name: default

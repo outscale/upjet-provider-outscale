@@ -1,0 +1,15 @@
+apiVersion: vpn.upjet-provider-outscale.upbound.io/v1alpha1
+kind: VpnConnection
+metadata:
+  name: vpnconnection
+  namespace: default
+spec:
+  forProvider:
+    connectionType: "ipsec.1"
+    clientGatewayIdRef:
+      name: cgw
+    virtualGatewayIdRef:
+      name: vgw
+    staticRoutesOnly: true  
+  providerConfigRef:
+    name: default 

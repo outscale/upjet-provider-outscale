@@ -1,0 +1,19 @@
+apiVersion: nic.upjet-provider-outscale.upbound.io/v1alpha1
+kind: Nic
+metadata:
+  name: nic-eth0
+  namespace: default
+spec:
+  forProvider:
+    securityGroupIdsRefs: 
+    - name: sg
+    subnetIdRef:
+      name: subnet
+    privateIps:
+    - privateIp: "10.0.0.10" 
+      isPrimary: true
+    tags: 
+      - key: Name
+        value: n
+  providerConfigRef:
+    name: default

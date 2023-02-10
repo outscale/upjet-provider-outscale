@@ -1,0 +1,10 @@
+apiVersion: keypair.upjet-provider-outscale.upbound.io/v1alpha1
+kind: Keypair
+metadata:
+  name: cp-keypair
+  namespace: default
+spec:
+  forProvider:
+    keypairName: "cp-keypair"
+  providerConfigRef:
+    name: default
