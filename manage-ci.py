@@ -146,7 +146,14 @@ def main():
     elif update:
         my_env['TERRAFORM_PROVIDER_VERSION'] = terraform_version
         my_env['TERRAFORM_NATIVE_PROVIDER_BINARY'] = "terraform-provider-outscale_v{0}".format(terraform_version)
-        execute_bash_cmd(["rm","-r", "config/*/"], full_local_path, my_env)
+        execute_bash_cmd(["mv", "config", "config-save"], full_local_path, my_env)
+        execute_bash_cmd(["rm", "-rf", "config"], full_local_path, my_env)
+        execute_bash_cmd(["mkdir", "config"], full_local_path, my_env)
+        execute_bash_cmd(["mv", "config-save/external_name.go", "config/external_name.go"], full_local_path, my_env)
+        execute_bash_cmd(["mv", "config-save/provider.go", "config/provider.go"], full_local_path, my_env)
+        execute_bash_cmd(["mv", "config-save/provider-metadata.yaml", "config/provider-metadata.yaml"], full_local_path, my_env)
+        execute_bash_cmd(["mv", "config-save/schema.json", "config/schema.json"], full_local_path, my_env)
+        execute_bash_cmd(["rm", "-rf", "config-save"], full_local_path, my_env)
         execute_bash_cmd(["rm", "-rf", "apis"], full_local_path, my_env )
         execute_bash_cmd(["rm", "-rf", "packages"], full_local_path, my_env )
         execute_bash_cmd(["rm", "-rf", "internal/controller"], full_local_path, my_env )
