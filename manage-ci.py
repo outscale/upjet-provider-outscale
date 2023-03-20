@@ -52,7 +52,7 @@ def push(full_local_path, branch):
 
 def apply(full_local_path, folder):
     repo = Repo(full_local_path)
-    repo.git.execute(['git', 'apply', '-f', folder])
+    repo.git.execute(['git', 'apply', folder])
 
 def get_release(repo, token):
     G = Github(token)
@@ -77,7 +77,7 @@ def execute_bash_cmd(cmd, full_local_path, my_env):
 
 def read_file(filename):
     with open(filename, 'r') as f:
-        print(f.read())
+        return f.read()
 
 def main():
 
@@ -105,6 +105,7 @@ def main():
     parser.add_argument("-p", "--pullrequest", help="PullRequest", action="store_true")
     parser.add_argument("-r", "--read", help="ReadTerraformVersion", action="store_true")
     parser.add_argument("-g", "--get", help="GetTerraformVersion", action="store_true")
+    parser.add_argument("-ct", "--compareterraform", help="CompareTerraform", action="store_true")
     parser.add_argument("-u", "--update", help="Update", action="store_true" )
     args = parser.parse_args()
     apply = args.apply
@@ -114,6 +115,7 @@ def main():
     clone = args.clone
     e2etest = args.e2etest
     read_terraform_version = args.read
+    compare_terraform_version = args.compareterraform
     get_terraform_version = args.get
 
     my_env = os.environ.copy()
@@ -145,7 +147,10 @@ def main():
         my_env['TERRAFORM_PROVIDER_VERSION'] = terraform_version
         my_env['TERRAFORM_NATIVE_PROVIDER_BINARY'] = "terraform-provider-outscale_v{0}".format(terraform_version)
         execute_bash_cmd(["rm"," -rf", "config"], full_local_path, my_env)
-        apply(full_local_path, "patch")   
+        execute_bash_cmd(["rm", "-rf", "apis"], full_local_path, my_env )
+        execute_bash_cmd(["rm", "-rf", "packages"], full_local_path, my_env )
+        execute_bash_cmd(["rm", "-rf", "internal/controller"], full_local_path, my_env )
+        apply(full_local_path, "./patch*")   
         execute_bash_cmd(["make", "submodules"], full_local_path, my_env )
         execute_bash_cmd(["make", "build"], full_local_path, my_env)
         execute_bash_cmd(["make", "docker-buildx"], full_local_path, my_env)
@@ -157,10 +162,17 @@ def main():
         execute_bash_cmd(["make", "docker-buildx"], full_local_path, my_env)
         execute_bash_cmd(["make", "docker-push"], full_local_path, my_env)
     elif read_terraform_version:
-        read_file(terraform_version_file)
+        terraform_version = read_file(terraform_version_file)
+        print(terraform_version)
     elif get_terraform_version:
         release_title, release_body = get_release(watch_target_projet,password)
         print(release_title)
+    elif compare_terraform_version:
+        release_title, release_body = get_release(watch_target_projet,password)
+        terraform_version = read_file(terraform_version_file)
+   
+        
+    
 
         
 

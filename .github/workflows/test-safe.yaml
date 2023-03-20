@@ -30,15 +30,56 @@ jobs:
       uses: azure/setup-helm@v3
       with:
         version: v3.10.1
-    
-    - name: Install python version
+    - name: Install first time pyenv
       uses: gabrielfalcao/pyenv-action@v11
       with:
         default: "3.10"
         command: pip install -U pip   
-    - name: Install deps
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2 
+    - name: Update Version
       run: |
         sudo pip3 install --ignore-installed -r requirements.txt
+        make update
       env:
+        IMG: 127.0.0.1:4242/upjet-provider-outscale:${{ github.sha }}
+        DOCKER_BUILDKIT: 1
         git_full_local_path: /tmp/upjet-provider-outscale
+        git_password: ${{ secrets.UPJET_TOKEN }}
+    - name: Deploy Cluster
+      uses: ./rke-cluster-for-upjet/github_actions/deploy_cluster/
+      with:
+        repository_folder: "rke-cluster-for-upjet"
+        osc_access_key: ${{ secrets.OSC_ACCESS_KEY }}
+        osc_secret_key: ${{ secrets.OSC_SECRET_KEY }}
+        osc_region: ${{ secrets.OSC_REGION }}
+        image_id: ${{ secrets.OMI_ID }}   
+    - name: Install first time pyenv
+      uses: gabrielfalcao/pyenv-action@v11
+      with:
+        default: "3.10"
+        command: pip install -U pip   
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2 
+    - name: Update Version
+      run: |
+        sudo pip3 install --ignore-installed -r requirements.txt
+        make update
+      env:
+        IMG: 127.0.0.1:4242/upjet-provider-outscale:${{ github.sha }}
+        DOCKER_BUILDKIT: 1
+        git_full_local_path: /tmp/upjet-provider-outscale
+        git_password: ${{ secrets.UPJET_TOKEN }}
+        OSC_ACCESS_KEY: ${{ secrets.OSC_ACCESS_KEY }}
+        OSC_SECRET_KEY: ${{ secrets.OSC_SECRET_KEY }}
+        OSC_REGION: ${{ secrets.OSC_REGION }}   
+    - name: Destroy cluster
+      uses: ./rke-cluster-for-upjet/github_actions/destroy_cluster/
+      if: ${{ always() }}
+      with:
+        repository_folder: "./rke-cluster-for-upjet"
+        osc_access_key: ${{ secrets.OSC_ACCESS_KEY }}
+        osc_secret_key: ${{ secrets.OSC_SECRET_KEY }}
+        osc_region: ${{ secrets.OSC_REGION }}     
+  
   

@@ -258,7 +258,15 @@ buildpush:
 deployment: 
 	python3 manage-ci.py -d
 
-
 .PHONY: update
 update: 
 	python3 manage-ci.py -u
+
+
+.PHONY: compare
+compare: 
+	python3 manage-ci.py -ct
+
+.PHONY: func-test
+func-test: 
+	python3 func_test.py
