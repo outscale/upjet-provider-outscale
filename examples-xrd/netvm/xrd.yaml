@@ -1,0 +1,61 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: compositenetvm.foo.bar
+spec:
+  group: foo.bar
+  names:
+    kind: CompositeNetVm
+    plural: compositenetvm
+  claimNames:
+    kind: NetVm
+    plural: netvm
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              parameters:
+                type: object
+                properties:
+                  subregionName:
+                    description: Geographic Subregion Name
+                    type: string
+                  volumeSize:
+                    description: Boot Disk volume size
+                    type: integer
+                  volumeType:
+                    description: Type of volume (io1, gp2, standard)
+                    type: string
+                  ipRanges:
+                    description: Allow ip ranges
+                    type: string
+                  vmType:
+                    description: Vm Type
+                    type: string
+                  imageId:
+                    description: Outscale Omi
+                    type: string   
+                  netIpRange:
+                    description: net Ip Range
+                    type: string   
+                  subnetIpRange:
+                    description: subnet Ip Range
+                    type: string                    
+                required:
+                - subregionName
+                - volumeSize
+                - volumeType
+                - ipRanges
+                - vmType
+                - imageId
+                - netIpRange
+                - subnetIpRange
+            required:
+            - parameters
