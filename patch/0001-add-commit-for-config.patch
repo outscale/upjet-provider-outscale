@@ -1,12 +1,11 @@
-From 5010f363b08176f2cf1da552708d3bac3a47a6a1 Mon Sep 17 00:00:00 2001
+From ed883904f560a4897f877072c89fed0184eb427f Mon Sep 17 00:00:00 2001
 From: "vincent.baer" <vincent.baer@outscale.com>
-Date: Mon, 20 Mar 2023 15:52:53 +0000
-Subject: [PATCH] Add custom config
+Date: Mon, 20 Mar 2023 16:32:38 +0000
+Subject: [PATCH] add commit for config
 
 ---
  config/clientgateway/config.go   | 14 ++++++++++
  config/dhcpoption/config.go      | 15 +++++++++++
- config/external_name.go          | 40 ++++++++++++++++++++++++++++-
  config/image/config.go           | 35 +++++++++++++++++++++++++
  config/internetservice/config.go | 24 +++++++++++++++++
  config/keypair/config.go         | 14 ++++++++++
@@ -24,7 +23,7 @@ Subject: [PATCH] Add custom config
  config/vm/config.go              | 26 +++++++++++++++++++
  config/volume/config.go          | 25 ++++++++++++++++++
  config/vpn/config.go             | 26 +++++++++++++++++++
- 20 files changed, 521 insertions(+), 1 deletion(-)
+ 19 files changed, 482 insertions(+)
  create mode 100644 config/clientgateway/config.go
  create mode 100644 config/dhcpoption/config.go
  create mode 100644 config/image/config.go
