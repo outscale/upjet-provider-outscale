@@ -48,7 +48,7 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2 
     - name: Build Docker Image
-      run: make buildpush
+      run: make update
       env:
         IMG: 127.0.0.1:4242/upjet-provider-outscale:${{ github.sha }}
         DOCKER_BUILDKIT: 1
