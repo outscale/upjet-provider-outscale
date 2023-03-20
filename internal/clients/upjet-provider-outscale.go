@@ -15,16 +15,24 @@ import (
 
 	"github.com/upbound/upjet/pkg/terraform"
 
-	"github.com/upbound/upjet-provider-template/apis/v1beta1"
+	"github.com/outscale-vbr/upjet-provider-outscale/apis/v1beta1"
 )
 
 const (
+	keyAccessKeyID = "access_key_id"
+	keySecretKeyID = "secret_key_id"
+	keyRegion = "region"
+  
+	// GitHub credentials environment variable names
+	envAccessKeyId = "OUTSCALE_ACCESSKEYID"
+	envSecretKeyId  = "OUTSCALE_SECRETKEYID"
+	envRegion = "OUTSCALE_REGION"
 	// error messages
 	errNoProviderConfig     = "no providerConfigRef provided"
 	errGetProviderConfig    = "cannot get referenced ProviderConfig"
 	errTrackUsage           = "cannot track ProviderConfig usage"
 	errExtractCredentials   = "cannot extract credentials"
-	errUnmarshalCredentials = "cannot unmarshal template credentials as JSON"
+	errUnmarshalCredentials = "cannot unmarshal upjet-provider-outscale credentials as JSON"
 )
 
 // TerraformSetupBuilder builds Terraform a terraform.SetupFn function which
@@ -57,16 +65,19 @@ func TerraformSetupBuilder(version, providerSource, providerVersion string) terr
 		if err != nil {
 			return ps, errors.Wrap(err, errExtractCredentials)
 		}
-		creds := map[string]string{}
-		if err := json.Unmarshal(data, &creds); err != nil {
+		outscaleCreds := map[string]string{}
+		if err := json.Unmarshal(data, &outscaleCreds); err != nil {
 			return ps, errors.Wrap(err, errUnmarshalCredentials)
 		}
+		
+		
+		ps.Configuration = map[string]any{
+			keyAccessKeyID:          outscaleCreds[envAccessKeyId],
+			keySecretKeyID:    outscaleCreds[envSecretKeyId],
+			keyRegion: outscaleCreds[envRegion],
+		}
 
-		// Set credentials in Terraform provider configuration.
-		/*ps.Configuration = map[string]any{
-			"username": creds["username"],
-			"password": creds["password"],
-		}*/
+		
 		return ps, nil
 	}
 }

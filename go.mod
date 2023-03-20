@@ -1,4 +1,4 @@
-module github.com/upbound/upjet-provider-template
+module github.com/outscale-vbr/upjet-provider-outscale
 
 go 1.19
 
