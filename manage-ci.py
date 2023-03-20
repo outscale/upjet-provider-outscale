@@ -150,7 +150,7 @@ def main():
         execute_bash_cmd(["rm", "-rf", "apis"], full_local_path, my_env )
         execute_bash_cmd(["rm", "-rf", "packages"], full_local_path, my_env )
         execute_bash_cmd(["rm", "-rf", "internal/controller"], full_local_path, my_env )
-        apply(full_local_path, "./patch*")   
+        print(apply(full_local_path, "./patch*"))   
         execute_bash_cmd(["make", "submodules"], full_local_path, my_env )
         execute_bash_cmd(["make", "build"], full_local_path, my_env)
         execute_bash_cmd(["make", "docker-buildx"], full_local_path, my_env)
