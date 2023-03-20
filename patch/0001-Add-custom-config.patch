@@ -1,0 +1,656 @@
+From 5010f363b08176f2cf1da552708d3bac3a47a6a1 Mon Sep 17 00:00:00 2001
+From: "vincent.baer" <vincent.baer@outscale.com>
+Date: Mon, 20 Mar 2023 15:52:53 +0000
+Subject: [PATCH] Add custom config
+
+---
+ config/clientgateway/config.go   | 14 ++++++++++
+ config/dhcpoption/config.go      | 15 +++++++++++
+ config/external_name.go          | 40 ++++++++++++++++++++++++++++-
+ config/image/config.go           | 35 +++++++++++++++++++++++++
+ config/internetservice/config.go | 24 +++++++++++++++++
+ config/keypair/config.go         | 14 ++++++++++
+ config/loadbalancer/config.go    | 44 ++++++++++++++++++++++++++++++++
+ config/nat/config.go             | 21 +++++++++++++++
+ config/net/config.go             | 39 ++++++++++++++++++++++++++++
+ config/nic/config.go             | 28 ++++++++++++++++++++
+ config/publicip/config.go        | 25 ++++++++++++++++++
+ config/route/config.go           | 23 +++++++++++++++++
+ config/routetable/config.go      | 29 +++++++++++++++++++++
+ config/securitygroup/config.go   | 28 ++++++++++++++++++++
+ config/snapshot/config.go        | 35 +++++++++++++++++++++++++
+ config/subnet/config.go          | 17 ++++++++++++
+ config/virtualgateway/config.go  | 14 ++++++++++
+ config/vm/config.go              | 26 +++++++++++++++++++
+ config/volume/config.go          | 25 ++++++++++++++++++
+ config/vpn/config.go             | 26 +++++++++++++++++++
+ 20 files changed, 521 insertions(+), 1 deletion(-)
+ create mode 100644 config/clientgateway/config.go
+ create mode 100644 config/dhcpoption/config.go
+ create mode 100644 config/image/config.go
+ create mode 100644 config/internetservice/config.go
+ create mode 100644 config/keypair/config.go
+ create mode 100644 config/loadbalancer/config.go
+ create mode 100644 config/nat/config.go
+ create mode 100644 config/net/config.go
+ create mode 100644 config/nic/config.go
+ create mode 100644 config/publicip/config.go
+ create mode 100644 config/route/config.go
+ create mode 100644 config/routetable/config.go
+ create mode 100644 config/securitygroup/config.go
+ create mode 100644 config/snapshot/config.go
+ create mode 100644 config/subnet/config.go
+ create mode 100644 config/virtualgateway/config.go
+ create mode 100644 config/vm/config.go
+ create mode 100644 config/volume/config.go
+ create mode 100644 config/vpn/config.go
+
+diff --git a/config/clientgateway/config.go b/config/clientgateway/config.go
+new file mode 100644
+index 0000000..d671476
+--- /dev/null
++++ b/config/clientgateway/config.go
+@@ -0,0 +1,14 @@
++package clientgateway
++
++import "github.com/upbound/upjet/pkg/config"
++
++const clientGatewayShortGroup = "clientgateway"
++
++// Configure configures individual resources by adding custom ResourceConfigurators.
++func Configure(p *config.Provider) {
++	p.AddResourceConfigurator("outscale_client_gateway", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = clientGatewayShortGroup
++		r.Kind = "ClientGateway"
++	})
++}
+\ No newline at end of file
+diff --git a/config/dhcpoption/config.go b/config/dhcpoption/config.go
+new file mode 100644
+index 0000000..87251a7
+--- /dev/null
++++ b/config/dhcpoption/config.go
+@@ -0,0 +1,15 @@
++package dhcpoption
++
++import "github.com/upbound/upjet/pkg/config"
++
++
++const dhcpOptionShortGroup = "dhcpoption"
++
++// Configure configures individual resources by adding custom ResourceConfigurators.
++func Configure(p *config.Provider) {
++	p.AddResourceConfigurator("outscale_dhcp_option", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = dhcpOptionShortGroup
++		r.Kind = "DhcpOption"
++	})
++}
+diff --git a/config/image/config.go b/config/image/config.go
+new file mode 100644
+index 0000000..5b5349e
+--- /dev/null
++++ b/config/image/config.go
+@@ -0,0 +1,35 @@
++package image
++
++import "github.com/upbound/upjet/pkg/config"
++
++const imageShortGroup = "image"
++
++// Configure configures individual resources by adding custom ResourceConfigurators.
++func Configure(p *config.Provider) {
++	p.AddResourceConfigurator("outscale_image", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = imageShortGroup
++		r.Kind = "Image"
++		r.References["source_image_id"] = config.Reference {
++			Type: "Image",
++		}
++		r.References["vm_id"] = config.Reference{
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/vm/v1alpha1.Vm",
++		}
++
++	})
++	p.AddResourceConfigurator("outscale_image_export_task", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = imageShortGroup
++		r.References["image_id"] = config.Reference {
++			Type: "Image",
++		}
++	})
++	p.AddResourceConfigurator("outscale_image_launch_permission", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = imageShortGroup
++		r.References["image_id"] = config.Reference {
++			Type: "Image",
++		}
++	})
++}
+\ No newline at end of file
+diff --git a/config/internetservice/config.go b/config/internetservice/config.go
+new file mode 100644
+index 0000000..7b1c39b
+--- /dev/null
++++ b/config/internetservice/config.go
+@@ -0,0 +1,24 @@
++package internetservice
++
++import "github.com/upbound/upjet/pkg/config"
++const internetServiceShortGroup = "internetService"
++
++// Configure configures individual resources by adding custom ResourceConfigurators.
++func Configure(p *config.Provider) {
++	p.AddResourceConfigurator("outscale_internet_service", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = internetServiceShortGroup
++		r.Kind = "InternetService"
++	})
++	p.AddResourceConfigurator("outscale_internet_service_link", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = internetServiceShortGroup
++		r.Kind = "InternetServiceLink"
++		r.References["internet_service_id"] = config.Reference {
++			Type: "InternetService",
++		}
++		r.References["net_id"] = config.Reference {
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/net/v1alpha1.Net",
++		}
++	})
++}
+diff --git a/config/keypair/config.go b/config/keypair/config.go
+new file mode 100644
+index 0000000..b2ec891
+--- /dev/null
++++ b/config/keypair/config.go
+@@ -0,0 +1,14 @@
++package keypair
++
++import "github.com/upbound/upjet/pkg/config"
++
++const keypairShortGroup = "keypair"
++
++// Configure configures individual resources by adding custom ResourceConfigurators.
++func Configure(p *config.Provider) {
++	p.AddResourceConfigurator("outscale_keypair", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = keypairShortGroup
++		r.Kind = "Keypair"
++	})
++}
+diff --git a/config/loadbalancer/config.go b/config/loadbalancer/config.go
+new file mode 100644
+index 0000000..6a86ec7
+--- /dev/null
++++ b/config/loadbalancer/config.go
+@@ -0,0 +1,44 @@
++package loadbalancer
++
++import "github.com/upbound/upjet/pkg/config"
++
++const loadBalancerShortGroup = "loadbalancer"
++
++// Configure configures individual resources by adding custom ResourceConfigurators.
++func Configure(p *config.Provider) {
++	p.AddResourceConfigurator("outscale_load_balancer", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = loadBalancerShortGroup
++		r.Kind = "LoadBalancer"
++		r.References["security_groups"] = config.Reference {
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/securitygroup/v1alpha1.SecurityGroup",
++		}
++		r.References["subnets"] = config.Reference {
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
++		}
++	})
++	p.AddResourceConfigurator("outscale_load_balancer_attributes", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = loadBalancerShortGroup
++		r.Kind = "LoadBalancerAttributes"
++	})
++	p.AddResourceConfigurator("outscale_load_balancer_listener_rule", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = loadBalancerShortGroup
++		r.Kind = "LoadBalancerListernerRule"
++	})
++	p.AddResourceConfigurator("outscale_load_balancer_policy", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = loadBalancerShortGroup
++		r.Kind = "LoadBalancerPolicy"
++	})
++	p.AddResourceConfigurator("outscale_load_balancer_vms", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = loadBalancerShortGroup
++		r.Kind = "LoadBalancerVms"
++		r.References["backend_vm_ids"] = config.Reference{
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/vm/v1alpha1.Vm",
++		}
++	})
++
++}
+\ No newline at end of file
+diff --git a/config/nat/config.go b/config/nat/config.go
+new file mode 100644
+index 0000000..b0ea7c6
+--- /dev/null
++++ b/config/nat/config.go
+@@ -0,0 +1,21 @@
++package nat
++
++import "github.com/upbound/upjet/pkg/config"
++
++const natShortGroup = "nat"
++
++// Configure configures individual resources by adding custom ResourceConfigurators.
++func Configure(p *config.Provider) {
++	p.AddResourceConfigurator("outscale_nat_service", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = natShortGroup
++		r.Kind = "Nat"
++		r.References["public_ip_id"] = config.Reference{
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/publicip/v1alpha1.PublicIp",
++		}
++		r.References["subnet_id"] = config.Reference{
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
++		}
++	})
++}
++
+diff --git a/config/net/config.go b/config/net/config.go
+new file mode 100644
+index 0000000..c705cb4
+--- /dev/null
++++ b/config/net/config.go
+@@ -0,0 +1,39 @@
++package net
++
++import "github.com/upbound/upjet/pkg/config"
++const netShortGroup = "net"
++
++// Configure configures individual resources by adding custom ResourceConfigurators.
++func Configure(p *config.Provider) {
++    p.AddResourceConfigurator("outscale_net", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = netShortGroup
++		r.Kind = "Net"
++})
++p.AddResourceConfigurator("outscale_net_attributes", func(r *config.Resource) {
++	r.ExternalName = config.IdentifierFromProvider
++ r.ShortGroup = netShortGroup
++ r.Kind = "NetAttributes"
++
++})
++p.AddResourceConfigurator("outscale_net_peering", func(r *config.Resource) {
++	r.ExternalName = config.IdentifierFromProvider
++ r.ShortGroup = netShortGroup
++ r.Kind = "NetPeering"
++ r.References["accepter_net_id"] = config.Reference {
++	 Type: "Net",
++ }
++ r.References["source_net_id"] = config.Reference {
++	 Type: "Net",
++ }
++})
++p.AddResourceConfigurator("outscale_net_peering_acceptation", func(r *config.Resource) {
++		 r.ExternalName = config.IdentifierFromProvider
++		 r.ShortGroup = netShortGroup
++		 r.Kind = "NetPeeringAcceptation"
++		 r.References["net_peering_id"] = config.Reference {
++				 Type: "NetPeering",
++
++		 }
++})
++}
+\ No newline at end of file
+diff --git a/config/nic/config.go b/config/nic/config.go
+new file mode 100644
+index 0000000..1990f67
+--- /dev/null
++++ b/config/nic/config.go
+@@ -0,0 +1,28 @@
++package nic
++
++import "github.com/upbound/upjet/pkg/config"
++
++const nicShortGroup = "nic"
++
++// Configure configures individual resources by adding custom ResourceConfigurators.
++func Configure(p *config.Provider) {
++	p.AddResourceConfigurator("outscale_nic", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = nicShortGroup
++		r.Kind = "Nic"
++		r.References["security_group_ids"] = config.Reference{
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/securitygroup/v1alpha1.SecurityGroup",
++		}
++		r.References["subnet_id"] = config.Reference{
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
++		}
++	})
++	p.AddResourceConfigurator("outscale_nic_private_ip", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = nicShortGroup
++		r.Kind = "NicPrivateIp"
++		r.References["nic_id"] = config.Reference{
++			Type: "Nic",
++		}
++	})
++}
+diff --git a/config/publicip/config.go b/config/publicip/config.go
+new file mode 100644
+index 0000000..0a5ef44
+--- /dev/null
++++ b/config/publicip/config.go
+@@ -0,0 +1,25 @@
++package publicip
++
++import "github.com/upbound/upjet/pkg/config"
++
++const publicIpShortGroup = "publicip"
++
++// Configure configures individual resources by adding custom ResourceConfigurators.
++func Configure(p *config.Provider) {
++	p.AddResourceConfigurator("outscale_public_ip", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = publicIpShortGroup
++		r.Kind = "PublicIp"
++	})
++	p.AddResourceConfigurator("outscale_public_ip_link", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = publicIpShortGroup
++		r.Kind = "PublicIpLink"
++		r.References["public_ip_id"] = config.Reference{
++			Type: "PublicIp",
++		}
++		r.References["vm_id"] = config.Reference{
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/vm/v1alpha1.Vm",
++		}
++	})
++}
+\ No newline at end of file
+diff --git a/config/route/config.go b/config/route/config.go
+new file mode 100644
+index 0000000..07d800e
+--- /dev/null
++++ b/config/route/config.go
+@@ -0,0 +1,23 @@
++package route
++
++import "github.com/upbound/upjet/pkg/config"
++
++const routeShortGroup = "route"
++
++// Configure configures individual resources by adding custom ResourceConfigurators.
++func Configure(p *config.Provider) {
++	p.AddResourceConfigurator("outscale_route", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = routeShortGroup
++		r.Kind = "Route"
++		r.References["gateway_id"] = config.Reference {
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/internetservice/v1alpha1.InternetService",
++		}
++		r.References["route_table_id"] = config.Reference {
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/routetable/v1alpha1.RouteTable",
++		}
++		r.References["nat_service_id"] = config.Reference {
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/nat/v1alpha1.Nat",
++		}
++	})
++}
+\ No newline at end of file
+diff --git a/config/routetable/config.go b/config/routetable/config.go
+new file mode 100644
+index 0000000..94fdc2c
+--- /dev/null
++++ b/config/routetable/config.go
+@@ -0,0 +1,29 @@
++package routetable
++
++import "github.com/upbound/upjet/pkg/config"
++
++const routeTableShortGroup = "routetable"
++
++// Configure configures individual resources by adding custom ResourceConfigurators.
++func Configure(p *config.Provider) {
++	p.AddResourceConfigurator("outscale_route_table", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = routeTableShortGroup
++		r.Kind = "RouteTable"
++		r.References["net_id"] = config.Reference{
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/net/v1alpha1.Net",
++		}
++	})
++	p.AddResourceConfigurator("outscale_route_table_link", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = routeTableShortGroup
++		r.Kind = "RouteTableLink"
++		r.References["route_table_id"] = config.Reference{
++			Type: "RouteTable",
++		}
++		r.References["subnet_id"] = config.Reference{
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
++		}
++	})
++}
++
+diff --git a/config/securitygroup/config.go b/config/securitygroup/config.go
+new file mode 100644
+index 0000000..d80224e
+--- /dev/null
++++ b/config/securitygroup/config.go
+@@ -0,0 +1,28 @@
++package securitygroup
++
++import "github.com/upbound/upjet/pkg/config"
++
++const securityGroupShortGroup = "securitygroup"
++
++// Configure configures individual resources by adding custom ResourceConfigurators.
++func Configure(p *config.Provider) {
++	p.AddResourceConfigurator("outscale_security_group", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = securityGroupShortGroup
++		r.Kind = "SecurityGroup"
++		r.References["net_id"] = config.Reference{
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/net/v1alpha1.Net",
++		}
++	})
++	p.AddResourceConfigurator("outscale_security_group_rule", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = securityGroupShortGroup
++		r.Kind = "SecurityGroupRule"
++		r.References["security_group_id"] = config.Reference {
++			Type: "SecurityGroup",
++		}
++		r.References["rules.security_groups_members.security_group_id"] = config.Reference {
++			Type: "SecurityGroup",
++		}
++	})
++}
+diff --git a/config/snapshot/config.go b/config/snapshot/config.go
+new file mode 100644
+index 0000000..bf94189
+--- /dev/null
++++ b/config/snapshot/config.go
+@@ -0,0 +1,35 @@
++package snapshot
++
++import "github.com/upbound/upjet/pkg/config"
++
++const snapshotShortGroup = "snapshot"
++
++func Configure(p *config.Provider) {
++	p.AddResourceConfigurator("outscale_snapshot", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = snapshotShortGroup
++		r.Kind = "Snapshot"
++		r.References["source_snapshot_id"] = config.Reference {
++			Type: "Snapshot",
++		}
++		r.References["volume_id"] = config.Reference {
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/volume/v1alpha1.Volume",
++        }
++	})
++	p.AddResourceConfigurator("outscale_snapshot_export_task", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = snapshotShortGroup
++		r.Kind = "SnapshotExportTask"
++		r.References["snapshot_id"] = config.Reference {
++			Type: "Snapshot",
++		}
++	})
++	p.AddResourceConfigurator("outscale_snapshot_attributes", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = snapshotShortGroup
++		r.Kind = "SnapshotAttributes"
++		r.References["snapshot_id"] = config.Reference {
++			Type: "Snapshot",
++		}
++	})
++}
+\ No newline at end of file
+diff --git a/config/subnet/config.go b/config/subnet/config.go
+new file mode 100644
+index 0000000..7cee07e
+--- /dev/null
++++ b/config/subnet/config.go
+@@ -0,0 +1,17 @@
++package subnet
++
++import "github.com/upbound/upjet/pkg/config"
++
++const subnetShortGroup = "subnet"
++
++// Configure configures individual resources by adding custom ResourceConfigurators.
++func Configure(p *config.Provider){
++	p.AddResourceConfigurator("outscale_subnet", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = subnetShortGroup
++		r.Kind = "Subnet"
++		r.References["net_id"] = config.Reference {
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/net/v1alpha1.Net",
++		}
++	})
++}
+diff --git a/config/virtualgateway/config.go b/config/virtualgateway/config.go
+new file mode 100644
+index 0000000..8bd656d
+--- /dev/null
++++ b/config/virtualgateway/config.go
+@@ -0,0 +1,14 @@
++package virtualgateway
++
++import "github.com/upbound/upjet/pkg/config"
++
++const virtualGatewayShortGroup = "virtualgateway"
++
++// Configure configures individual resources by adding custom ResourceConfigurators.
++func Configure(p *config.Provider) {
++	p.AddResourceConfigurator("outscale_virtual_gateway", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = virtualGatewayShortGroup
++		r.Kind = "VirtualGateway"
++	})
++}
+\ No newline at end of file
+diff --git a/config/vm/config.go b/config/vm/config.go
+new file mode 100644
+index 0000000..5a8b02a
+--- /dev/null
++++ b/config/vm/config.go
+@@ -0,0 +1,26 @@
++package vm
++
++import "github.com/upbound/upjet/pkg/config"
++
++const vmShortGroup = "vm"
++
++// Configure configures individual resources by adding custom ResourceConfigurators.
++func Configure(p *config.Provider) {
++	p.AddResourceConfigurator("outscale_vm", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = vmShortGroup
++		r.Kind = "Vm"
++		r.References["security_group_ids"] = config.Reference {
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/securitygroup/v1alpha1.SecurityGroup",
++		}
++		r.References["subnet_id"] = config.Reference {
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
++		}
++		r.References["nics.subnet_id"] = config.Reference {
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
++		}
++		r.References["nics.nic_id"] = config.Reference {
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/nic/v1alpha1.Nic",
++		}
++	})
++}
+\ No newline at end of file
+diff --git a/config/volume/config.go b/config/volume/config.go
+new file mode 100644
+index 0000000..5629f66
+--- /dev/null
++++ b/config/volume/config.go
+@@ -0,0 +1,25 @@
++package volume
++
++import "github.com/upbound/upjet/pkg/config"
++
++const volumeShortGroup = "volume"
++
++func Configure(p *config.Provider) {
++	p.AddResourceConfigurator("outscale_volume", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = volumeShortGroup
++		r.Kind = "Volume"
++	})
++	
++	p.AddResourceConfigurator("outscale_volumes_link", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = volumeShortGroup
++		r.Kind = "VolumesLink"		
++		r.References["vm_id"] = config.Reference{
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/vm/v1alpha1.Vm",
++		}
++		r.References["volume_id"] = config.Reference{
++			Type: "Volume",
++		}
++	})
++}
+diff --git a/config/vpn/config.go b/config/vpn/config.go
+new file mode 100644
+index 0000000..fea22ff
+--- /dev/null
++++ b/config/vpn/config.go
+@@ -0,0 +1,26 @@
++package vpn
++
++import "github.com/upbound/upjet/pkg/config"
++
++const vpnShortGroup = "vpn"
++
++func Configure(p *config.Provider) {
++	p.AddResourceConfigurator("outscale_vpn_connection", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = vpnShortGroup
++		r.Kind = "VpnConnection"
++		r.References["client_gateway_id"] = config.Reference{
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/clientgateway/v1alpha1.ClientGateway",
++		}
++		r.References["virtual_gateway_id"] = config.Reference{
++			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/virtualgateway/v1alpha1.VirtualGateway",		}
++	})
++	p.AddResourceConfigurator("outscale_vpn_connection_route", func(r *config.Resource) {
++		r.ExternalName = config.IdentifierFromProvider
++		r.ShortGroup = vpnShortGroup
++		r.Kind = "VpnConnectionRoute"
++		r.References["vpn_connection_id"] = config.Reference{
++			Type: "VpnConnection",
++		}
++	})
++}
+\ No newline at end of file
+-- 
+2.25.1
+
