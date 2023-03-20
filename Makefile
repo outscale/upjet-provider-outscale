@@ -1,19 +1,31 @@
 # ====================================================================================
 # Setup Project
 
-PROJECT_NAME := upjet-provider-template
-PROJECT_REPO := github.com/upbound/$(PROJECT_NAME)
 
+PROJECT_NAME := upjet-provider-outscale
+PROJECT_REPO := github.com/outscale-vbr/$(PROJECT_NAME)
+UPJET_SECRET_SOURCE := providerconfig/secret.yaml.tmpl
+UPJET_SECRET_FILE := providerconfig/secret.yaml
+UPJET_PROVIDER_SOURCE := providerconfig/provider.yaml.tmpl
+UPJET_PROVIDER_FILE := providerconfig/provider.yaml
+UPJET_PROVIDER_CONFIG_FILE := providerconfig/providerconfig.yaml
+
+RELEASE_DIR := out
+GET_GOPATH ?= $(shell go env GOPATH)
 export TERRAFORM_VERSION := 1.3.3
 
-export TERRAFORM_PROVIDER_SOURCE := hashicorp/null
-export TERRAFORM_PROVIDER_REPO := https://github.com/hashicorp/terraform-provider-null
-export TERRAFORM_PROVIDER_VERSION := 3.1.0
-export TERRAFORM_PROVIDER_DOWNLOAD_NAME := terraform-provider-null
-export TERRAFORM_NATIVE_PROVIDER_BINARY := terraform-provider-null_v3.1.0_x5
+export TERRAFORM_PROVIDER_SOURCE := outscale/outscale
+export TERRAFORM_PROVIDER_REPO := https://github.com/outscale/terraform-provider-outscale.git
+export TERRAFORM_PROVIDER_VERSION := 0.8.2
+export TERRAFORM_PROVIDER_DOWNLOAD_NAME := terraform-provider-outscale
+export TERRAFORM_NATIVE_PROVIDER_BINARY := terraform-provider-outscale_v0.8.2
 export TERRAFORM_DOCS_PATH := docs/resources
 
 PLATFORMS ?= linux_amd64 linux_arm64
+REGISTRY ?= outscale
+IMAGE_NAME ?= upjet-provider-outscale
+TAG ?= dev
+IMG ?= $(REGISTRY)/$(IMAGE_NAME):$(TAG)
 
 # -include will silently skip missing files, which allows us
 # to load those files with a target in the Makefile. If only
@@ -73,7 +85,7 @@ XPKGS = $(PROJECT_NAME)
 
 # NOTE(hasheddan): we force image building to happen prior to xpkg build so that
 # we ensure image is present in daemon.
-xpkg.build.upjet-provider-template: do.build.images
+xpkg.build.upjet-provider-outscale: do.build.images
 
 # NOTE(hasheddan): we ensure up is installed prior to running platform-specific
 # build steps in parallel to avoid encountering an installation race condition.
@@ -119,7 +131,7 @@ $(TERRAFORM_PROVIDER_SCHEMA): $(TERRAFORM)
 pull-docs:
 	@if [ ! -d "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)" ]; then \
   		mkdir -p "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)" && \
-		git clone -c advice.detachedHead=false --depth 1 --filter=blob:none --branch "v$(TERRAFORM_PROVIDER_VERSION)" --sparse "$(TERRAFORM_PROVIDER_REPO)" "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)"; \
+		git clone -c advice.detachedHead=false --depth 1 --filter=blob:none --branch "v$(TERRAFORM_PROVIDER_VERSION)" "$(TERRAFORM_PROVIDER_REPO)" "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)"; \
 	fi
 	@git -C "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)" sparse-checkout set "$(TERRAFORM_DOCS_PATH)"
 
@@ -166,7 +178,7 @@ CROSSPLANE_NAMESPACE = upbound-system
 
 uptest: $(UPTEST) $(KUBECTL) $(KUTTL)
 	@$(INFO) running automated tests
-	@KUBECTL=$(KUBECTL) KUTTL=$(KUTTL) $(UPTEST) e2e "${UPTEST_EXAMPLE_LIST}" --setup-script=cluster/test/setup.sh || $(FAIL)
+	@KUBECTL=$(KUBECTL) KUTTL=$(KUTTL) $(UPTEST) e2e "${UPTEST_EXAMPLE_LIST}" --default-timeout=600 || $(FAIL)
 	@$(OK) running automated tests
 
 local-deploy: build controlplane.up local.xpkg.deploy.provider.$(PROJECT_NAME)
@@ -175,7 +187,7 @@ local-deploy: build controlplane.up local.xpkg.deploy.provider.$(PROJECT_NAME)
 	@$(KUBECTL) -n upbound-system wait --for=condition=Available deployment --all --timeout=5m
 	@$(OK) running locally built provider
 
-e2e: local-deploy uptest
+e2e: uptest
 
 .PHONY: cobertura submodules fallthrough run crds.clean
 
@@ -199,3 +211,54 @@ crossplane.help:
 help-special: crossplane.help
 
 .PHONY: crossplane.help help-special
+
+.PHONY: docker-buildx
+docker-buildx: # Build docker image with the manager
+	docker buildx build --load -t ${IMG} .	
+
+.PHONY: docker-push
+docker-push: ## Push docker image with the manager.
+	docker push ${IMG}
+
+.PHONY: install-crossplane
+install-crossplane:
+	kubectl create namespace crossplane-system
+	helm repo add crossplane-stable https://charts.crossplane.io/stable
+	helm repo update
+	helm install crossplane --namespace crossplane-system crossplane-stable/crossplane
+
+ENVSUBST = $(shell pwd)/bin/envsubst
+.PHONY: envsubst
+envsubst:
+	GOPATH=${GET_GOPATH} ./hack/ensure-envsubst.sh 
+
+.PHONY: providerconfig
+providerconfig: envsubst
+	kubectl apply -f package/crds
+	$(ENVSUBST) < $(UPJET_SECRET_SOURCE) > $(UPJET_SECRET_FILE) 
+	$(ENVSUBST) < $(UPJET_PROVIDER_SOURCE) > $(UPJET_PROVIDER_FILE) 
+	kubectl create namespace crossplane-system --dry-run=client -o yaml | kubectl apply -f - 
+	kubectl apply -f $(UPJET_PROVIDER_CONFIG_FILE) 
+	kubectl apply -f $(UPJET_SECRET_FILE) 
+	kubectl apply -f $(UPJET_PROVIDER_FILE) 
+
+.PHONY: clone
+clone: # Clone repository
+	python3 manage-ci.py -c
+
+.PHONY: apply
+apply: # Apply repository
+	python3 manage-ci.py -a
+
+.PHONY: buildpush
+buildpush:
+	python3 manage-ci.py -bp
+
+.PHONY: deployment
+deployment: 
+	python3 manage-ci.py -d
+
+
+.PHONY: update
+update: 
+	python3 manage-ci.py -u
