@@ -36,7 +36,9 @@ jobs:
         default: "3.10"
         command: pip install -U pip   
     - name: Clone Repository
-      run: make clone
+      run: |
+        sudo pip3 install --ignore-installed -r requirements.txt
+        make clone
       env:
         git_full_local_path: /tmp/upjet-provider-outscale
         git_password: ${{ secrets.UPJET_TOKEN }}
