@@ -1,0 +1,245 @@
+name: upgrade-terraform
+
+on:
+  push:
+jobs:
+  upgrade-terraform:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout uppjet
+      uses: actions/checkout@v3
+      with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+    - name: Checkout osc-k8s-rke-cluster
+      uses: actions/checkout@v3
+      with:
+        repository: 'outscale-dev/osc-k8s-rke-cluster'
+        path: "rke-cluster-for-upjet"
+        ref: master
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v2.0
+      with:
+        version: v1.22.7
+      id: install
+    - name: Install golang
+      uses: actions/setup-go@v3
+      with:
+        go-version: '1.19.7'
+    - name: Install helm
+      uses: azure/setup-helm@v3
+      with:
+        version: v3.10.1
+    - name: Install python version
+      uses: gabrielfalcao/pyenv-action@v11
+      with:
+        default: "3.10"
+        command: pip install -U pip   
+    - name: Install deps
+      run: |
+        sudo pip3 install --ignore-installed -r requirements.txt
+      env:
+        git_full_local_path: /tmp/upjet-provider-outscale
+    - name: Clone Repository
+      run: make clone
+      env:
+        git_full_local_path: /tmp/upjet-provider-outscale
+        git_password: ${{ secrets.UPJET_TOKEN }}
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2 
+    - name: Build Docker Image
+      run: make buildpush
+      env:
+        IMG: 127.0.0.1:4242/upjet-provider-outscale:${{ github.sha }}
+        DOCKER_BUILDKIT: 1
+        git_full_local_path: /tmp/upjet-provider-outscale
+        git_password: ${{ secrets.UPJET_TOKEN }}
+    - name: Create PR
+      run: make apply
+      shell: bash
+      env:
+        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
+        git_full_local_path: /tmp/upjet-provider-outscale
+        git_password: ${{ secrets.UPJET_TOKEN }}
+    - name: Deploy Cluster
+      uses: ./rke-cluster-for-upjet/github_actions/deploy_cluster/
+      with:
+        repository_folder: "rke-cluster-for-upjet"
+        osc_access_key: ${{ secrets.OSC_ACCESS_KEY }}
+        osc_secret_key: ${{ secrets.OSC_SECRET_KEY }}
+        osc_region: ${{ secrets.OSC_REGION }}
+        image_id: ${{ secrets.OMI_ID }}
+    - name: Wait Kubernetes control plane is up and running
+      uses: nick-invision/retry@v2
+      with:
+        timeout_seconds: 30
+        max_attempts: 20
+        retry_wait_seconds: 30
+        command: kubectl get --raw='/readyz?verbose'
+      env:
+        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
+    - name: Wait all infrastructure app are really up and running
+      uses: jupyterhub/action-k8s-await-workloads@v1
+      with:
+        workloads: ""
+        namespace: "" 
+        timeout: 600
+        max-restarts: -1
+      env:
+        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
+    - name: Deploy Docker-registry into cluster
+      run: |
+        ansible-playbook addons/docker-registry/playbook.yaml
+        ./addons/docker-registry/start_port_forwarding.sh &
+      env:
+        KUBECONFIG: rke/kube_config_cluster.yml
+        ANSIBLE_CONFIG: ansible.cfg
+      working-directory: rke-cluster-for-upjet
+    - name: Wait to access registry
+      uses: nick-invision/retry@v2
+      with:
+        timeout_seconds: 30
+        max_attempts: 10
+        retry_wait_seconds: 1
+        command: curl http://127.0.0.1:4242/v2
+    - name: Retrieve NodePort Ip and NodePort
+      run: |
+        echo 'NODEPORT_PORT<<EOF' >> $GITHUB_ENV
+        echo "$(kubectl get --namespace default -o jsonpath='{.spec.ports[0].nodePort}' services docker-registry)" >> $GITHUB_ENV
+        echo 'EOF' >> $GITHUB_ENV
+        echo 'NODEPORT_IP<<EOF' >> $GITHUB_ENV
+        echo "$(kubectl get nodes --namespace default -o jsonpath='{.items[0].status.addresses[0].address}')"  >> $GITHUB_ENV
+        echo 'EOF' >> $GITHUB_ENV
+      env:
+        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
+    - name: Push Docker Image
+      run: make docker-push
+      env:
+        IMG: 127.0.0.1:4242/upjet-provider-outscale:${{ github.sha }}
+        DOCKER_BUILDKIT: 1
+        git_full_local_path: /tmp/upjet-provider-outscale
+        git_password: ${{ secrets.UPJET_TOKEN }}
+    - name: Deploy crossplane
+      run: make install-crossplane
+      shell: bash
+      env:
+        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
+    - name: Create ns and set credential
+      run: 
+        make providerconfig
+      shell: bash
+      env:
+         KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
+         IMG: ${{ env.NODEPORT_IP }}:${{ env.NODEPORT_PORT }}/upjet-provider-outscale:${{ github.sha }}
+         OSC_ACCESS_KEY: ${{secrets.OSC_ACCESS_KEY}}
+         OSC_SECRET_KEY: ${{secrets.OSC_SECRET_KEY}}
+         OSC_REGION: ${{ secrets.OSC_REGION }}
+         git_full_local_path: /tmp/upjet-provider-outscale
+         git_password: ${{ secrets.UPJET_TOKEN }}
+    - name: Wait for pod to be ok
+      run: |
+        kubectl wait deployment/crossplane -n crossplane-system  --for=condition=Available --timeout 10m
+        kubectl wait deployment/crossplane-rbac-manager -n crossplane-system  --for=condition=Available --timeout 10m
+        kubectl wait providers/upjet-provider-outscale --for=condition=Healthy --timeout 10m
+      shell: bash
+      env: 
+        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
+    - name: Test Net
+      run: |
+        mkdir -p .cache/tools/linux_x86_64
+        make submodules
+        UPTEST_EXAMPLE_LIST=examples/net/net.yaml make e2e
+      shell: bash
+      if: ${{ always() }}
+      env: 
+        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
+    - name: Test images
+      run: |
+        make submodules
+        UPTEST_EXAMPLE_LIST=examples/images/image.yaml,examples/images/vm.yaml,examples/images/keypair.yaml, make e2e      shell: bash
+      shell: bash
+      if: ${{ always() }}
+      env:
+        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
+    - name: Test snapshot
+      run: |
+        make submodules
+        UPTEST_EXAMPLE_LIST=examples/snapshot/volumes.yaml,examples/snapshot/snapshot.yaml make e2e
+      shell: bash
+      if: ${{ always() }}
+      env:
+        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
+    - name: Test publlicIp
+      run: |
+        make submodules
+        UPTEST_EXAMPLE_LIST=examples/publicip/publicip.yaml make e2e
+      shell: bash
+      if: ${{ always() }}
+      env:
+        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
+    - name: Test subnet
+      run: |
+        make submodules
+        UPTEST_EXAMPLE_LIST=examples/subnet/subnet.yaml,examples/subnet/net.yaml make e2e
+      shell: bash
+      if: ${{ always() }}
+      env:
+        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
+    - name: Test volumes
+      run: |
+        make submodules
+        UPTEST_EXAMPLE_LIST=examples/volumes/keypair.yaml,examples/volumes/vm.yaml,examples/volumes/volumes.yaml make e2e
+      shell: bash
+      if: ${{ always() }}
+      env:
+        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml  
+    - name: Test vpn
+      run: |
+        make submodules
+        UPTEST_EXAMPLE_LIST=examples/vpn/cgw.yaml,examples/vpn/vgw.yaml,examples/vpn/vpnconnection.yaml,/examples/vpn/vpnconnectionroute.yaml make e2e
+      shell: bash
+      if: ${{ always() }}
+      env:
+        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml  
+    - name: Test vm
+      run: |
+        make submodules
+        UPTEST_EXAMPLE_LIST=examples/vm/keypair.yaml,examples/vm/securitygroup.yaml,examples/vm/securitygrouprule.yaml,examples/vm/vm.yaml make e2e
+      shell: bash
+      if: ${{ always() }}
+      env:
+        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml 
+    - name: Test nic
+      run: |
+        make submodules
+        UPTEST_EXAMPLE_LIST=examples/nic/keypair.yaml,examples/nic/nic.yaml,examples/nic/internetservice.yaml,examples/nic/net.yaml,examples/nic/publicip.yaml,examples/nic/route.yaml,examples/nic/routetable.yaml,examples/nic/securitygroup.yaml,examples/nic/securitygrouprule.yaml,examples/nic/subnet.yaml,examples/nic/vm.yaml make e2e
+      shell: bash
+      if: ${{ always() }}
+      env:
+        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
+    - name: Test net_vm
+      run: |
+        make submodules
+        UPTEST_EXAMPLE_LIST=examples/net_vm/internetservice.yaml,examples/net_vm/keypair.yaml,examples/net_vm/net.yaml,examples/net_vm/publicip.yaml,examples/net_vm/publicip.yaml,examples/net_vm/route.yaml,examples/net_vm/routetable.yaml,examples/net_vm/securitygroup.yaml,examples/net_vm/securitygrouprule.yaml,examples/net_vm/subnet.yaml,examples/net_vm/vm.yaml make e2e
+      shell: bash
+      if: ${{ always() }}
+      env:
+        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
+    - name: Test public-loadBalancer
+      run: |
+        make submodules
+        UPTEST_EXAMPLE_LIST=examples/public-loadbalancer/keypair.yaml,examples/public-loadbalancer/loadbalancer.yaml,examples/public-loadbalancer/securitygroup.yaml,examples/public-loadbalancer/securitygrouprule.yaml,examples/public-loadbalancer/vm.yaml make e2e
+      if: ${{ always() }}
+      shell: bash
+      env:
+        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
+    - name: Destroy cluster
+      uses: ./rke-cluster-for-upjet/github_actions/destroy_cluster/
+      if: ${{ always() }}
+      with:
+        repository_folder: "./rke-cluster-for-upjet"
+        osc_access_key: ${{ secrets.OSC_ACCESS_KEY }}
+        osc_secret_key: ${{ secrets.OSC_SECRET_KEY }}
+        osc_region: ${{ secrets.OSC_REGION }}
+    
+    
