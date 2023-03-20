@@ -5,18 +5,18 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.8.0
   creationTimestamp: null
-  name: resources.null.template.upbound.io
+  name: keypairs.keypair.upjet-provider-outscale.upbound.io
 spec:
-  group: null.template.upbound.io
+  group: keypair.upjet-provider-outscale.upbound.io
   names:
     categories:
     - crossplane
     - managed
-    - template
-    kind: Resource
-    listKind: ResourceList
-    plural: resources
-    singular: resource
+    - upjet-provider-outscale
+    kind: Keypair
+    listKind: KeypairList
+    plural: keypairs
+    singular: keypair
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -35,7 +35,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Resource is the Schema for the Resources API. <no value>
+        description: Keypair is the Schema for the Keypairs API. <no value>
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -50,7 +50,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: ResourceSpec defines the desired state of Resource
+            description: KeypairSpec defines the desired state of Keypair
             properties:
               deletionPolicy:
                 default: Delete
@@ -63,13 +63,10 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  triggers:
-                    additionalProperties:
-                      type: string
-                    description: A map of arbitrary strings that, when changed, will
-                      force the null resource to be replaced, re-running any associated
-                      provisioners.
-                    type: object
+                  keypairName:
+                    type: string
+                  publicKey:
+                    type: string
                 type: object
               providerConfigRef:
                 default:
@@ -243,11 +240,17 @@ spec:
             - forProvider
             type: object
           status:
-            description: ResourceStatus defines the observed state of Resource.
+            description: KeypairStatus defines the observed state of Keypair.
             properties:
               atProvider:
                 properties:
                   id:
+                    type: string
+                  keypairFingerprint:
+                    type: string
+                  privateKey:
+                    type: string
+                  requestId:
                     type: string
                 type: object
               conditions:
