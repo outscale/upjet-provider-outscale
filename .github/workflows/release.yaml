@@ -156,7 +156,7 @@ jobs:
     - name: Test images
       run: |
         make submodules
-        UPTEST_EXAMPLE_LIST=examples/images/image.yaml,examples/images/vm.yaml,examples/images/keypair.yaml, make e2e      shell: bash
+        UPTEST_EXAMPLE_LIST=examples/images/image.yaml,examples/images/vm.yaml,examples/images/keypair.yaml, make e2e 
       shell: bash
       if: ${{ always() }}
       env:
