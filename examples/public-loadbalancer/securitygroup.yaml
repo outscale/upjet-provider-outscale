@@ -1,0 +1,13 @@
+apiVersion: securitygroup.upjet-provider-outscale.upbound.io/v1alpha1
+kind: SecurityGroup
+metadata:
+  name: sg
+  namespace: default
+spec:
+  forProvider:
+    securityGroupName: "sg"
+    tags:
+      - key: Name
+        value: sg
+  providerConfigRef:
+    name: default 

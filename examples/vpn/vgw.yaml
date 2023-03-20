@@ -1,0 +1,10 @@
+apiVersion: virtualgateway.upjet-provider-outscale.upbound.io/v1alpha1
+kind: VirtualGateway
+metadata:
+  name: vgw
+  namespace: default
+spec:
+  forProvider:
+    connectionType: "ipsec.1"
+  providerConfigRef:
+    name: default 

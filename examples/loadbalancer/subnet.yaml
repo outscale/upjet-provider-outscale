@@ -1,0 +1,38 @@
+apiVersion: subnet.upjet-provider-outscale.upbound.io/v1alpha1
+kind: Subnet
+metadata:
+  name: subnet-public
+  namespace: default
+  labels: 
+    name: subnet
+spec:
+  forProvider:
+    ipRange: "10.0.0.0/24"
+    subregionName: "eu-west-2a"
+    netIdRef: 
+      name: net
+    tags: 
+      - key: Name
+        value: subnet-public
+  providerConfigRef:
+    name: default 
+---
+apiVersion: subnet.upjet-provider-outscale.upbound.io/v1alpha1
+kind: Subnet
+metadata:
+  name: subnet-private
+  namespace: default
+  labels: 
+    name: subnet
+spec:
+  forProvider:
+    ipRange: "10.0.1.0/24"
+    subregionName: "eu-west-2a"
+    netIdRef: 
+      name: net
+    tags: 
+      - key: Name
+        value: subnet-private
+  providerConfigRef:
+    name: default 
+

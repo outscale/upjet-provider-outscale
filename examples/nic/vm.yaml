@@ -1,0 +1,26 @@
+apiVersion: vm.upjet-provider-outscale.upbound.io/v1alpha1
+kind: Vm
+metadata:
+  name: vm
+  namespace: default
+spec:
+  forProvider:
+    imageId: "ami-ec7ef91f"
+    vmType: "tinav4.c1r1p2"
+    keypairName: "keypair"
+    blockDeviceMappings: 
+      - deviceName: "/dev/sda1"
+        bsu:
+          - volumeSize: 60
+            volumeType: "gp2"
+            deleteOnVmDeletion: true 
+    nics:
+    - deviceNumber: 0
+      nicIdRef:
+        name: nic-eth0   
+    userData: "IyEvYmluL2Jhc2gKc3VkbyBhcHQgdXBkYXRlIC15IApzdWRvIGFwdCBpbnN0YWxsIC15IGFwdC10cmFuc3BvcnQtaHR0cHMgY2EtY2VydGlmaWNhdGVzIGN1cmwgc29mdHdhcmUtcHJvcGVydGllcy1jb21tb24KY3VybCAtZnNTTCBodHRwczovL2Rvd25sb2FkLmRvY2tlci5jb20vbGludXgvdWJ1bnR1L2dwZyB8IHN1ZG8gYXB0LWtleSBhZGQgLQpzdWRvIGFkZC1hcHQtcmVwb3NpdG9yeSAiZGViIFthcmNoPWFtZDY0XSBodHRwczovL2Rvd25sb2FkLmRvY2tlci5jb20vbGludXgvdWJ1bnR1IGZvY2FsIHN0YWJsZSIKc3VkbyBhcHQgaW5zdGFsbCAteSBkb2NrZXItY2UKc3VkbyBkb2NrZXIgcnVuIC1kIC1wIDgwODA6ODAgdHV0dW0vaGVsbG8td29ybGQ="
+    tags: 
+      - key: Name
+        value: vm
+  providerConfigRef:
+    name: default

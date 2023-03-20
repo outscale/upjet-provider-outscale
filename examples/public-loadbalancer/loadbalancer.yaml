@@ -1,0 +1,47 @@
+apiVersion: loadbalancer.upjet-provider-outscale.upbound.io/v1alpha1
+kind: LoadBalancer
+metadata:
+  name: lbu
+  namespace: default
+spec:
+  forProvider:
+    loadBalancerName: "lbu"
+    subregionNames: 
+      - "eu-west-2a"
+    listeners:
+      - backendPort: 8080
+        backendProtocol: "HTTP"
+        loadBalancerPort: 8080
+        loadBalancerProtocol: "HTTP"
+  providerConfigRef:
+    name: default
+---
+apiVersion: loadbalancer.upjet-provider-outscale.upbound.io/v1alpha1
+kind: LoadBalancerAttributes
+metadata:
+  name: lbu
+  namespace: default
+spec:
+  forProvider:
+    loadBalancerName: "lbu"
+    healthCheck:
+      - healthyThreshold: 5
+        checkInterval: 5
+        path: "/"
+        port: 8080
+        protocol: "HTTP"
+        timeout: 5
+        unhealthyThreshold: 2
+  providerConfigRef:
+    name: default
+---
+apiVersion: loadbalancer.upjet-provider-outscale.upbound.io/v1alpha1
+kind: LoadBalancerVms
+metadata:
+  name: lbu
+  namespace: default
+spec:  
+  forProvider:
+    backendVmIdsRefs:
+      - name: vm      
+    loadBalancerName: "lbu"

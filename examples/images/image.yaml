@@ -1,0 +1,32 @@
+apiVersion: image.upjet-provider-outscale.upbound.io/v1alpha1
+kind: Image
+metadata:
+  name: image
+  namespace: default
+spec:
+  forProvider:
+    imageName: "image"
+    description: "terraform register api"
+    vmIdRef:  
+      name: vm 
+    tags: 
+      - key: Name
+        value: image
+  providerConfigRef:
+    name: default
+---
+apiVersion: image.upjet-provider-outscale.upbound.io/v1alpha1
+kind: LaunchPermission
+metadata:
+  name: image
+  namespace: default
+spec:
+  forProvider:
+    imageIdRef: 
+      name: image
+    permissionAdditions:
+      - accountIds:
+        - "027440686109"
+
+  providerConfigRef:
+    name: default
