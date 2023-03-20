@@ -10,12 +10,31 @@ import (
 
 	ujconfig "github.com/upbound/upjet/pkg/config"
 
-	"github.com/upbound/upjet-provider-template/config/null"
+	oscnet "github.com/outscale-vbr/upjet-provider-outscale/config/net"
+	oscinternetservice "github.com/outscale-vbr/upjet-provider-outscale/config/internetservice"
+	oscdhcoption "github.com/outscale-vbr/upjet-provider-outscale/config/dhcpoption"
+	oscsubnet "github.com/outscale-vbr/upjet-provider-outscale/config/subnet"
+	oscvm "github.com/outscale-vbr/upjet-provider-outscale/config/vm"
+	oscroutetable "github.com/outscale-vbr/upjet-provider-outscale/config/routetable"
+	oscsecuritygroup "github.com/outscale-vbr/upjet-provider-outscale/config/securitygroup"
+	oscroute "github.com/outscale-vbr/upjet-provider-outscale/config/route"
+	oscpublicip "github.com/outscale-vbr/upjet-provider-outscale/config/publicip"
+	osckeypair"github.com/outscale-vbr/upjet-provider-outscale/config/keypair"
+	oscloadbalancer "github.com/outscale-vbr/upjet-provider-outscale/config/loadbalancer"
+	oscnat "github.com/outscale-vbr/upjet-provider-outscale/config/nat"
+	oscvolume "github.com/outscale-vbr/upjet-provider-outscale/config/volume"
+	oscsnapshot "github.com/outscale-vbr/upjet-provider-outscale/config/snapshot"
+	oscimage "github.com/outscale-vbr/upjet-provider-outscale/config/image"
+	oscnic "github.com/outscale-vbr/upjet-provider-outscale/config/nic"
+	oscvpn "github.com/outscale-vbr/upjet-provider-outscale/config/vpn"
+	oscclientgateway "github.com/outscale-vbr/upjet-provider-outscale/config/clientgateway"
+	oscvirtualgateway "github.com/outscale-vbr/upjet-provider-outscale/config/virtualgateway"
+
 )
 
 const (
-	resourcePrefix = "template"
-	modulePath     = "github.com/upbound/upjet-provider-template"
+	resourcePrefix = "upjet-provider-outscale"
+	modulePath     = "github.com/outscale-vbr/upjet-provider-outscale"
 )
 
 //go:embed schema.json
@@ -31,10 +50,27 @@ func GetProvider() *ujconfig.Provider {
 		ujconfig.WithDefaultResourceOptions(
 			ExternalNameConfigurations(),
 		))
-
 	for _, configure := range []func(provider *ujconfig.Provider){
 		// add custom config functions
-		null.Configure,
+		oscnet.Configure,
+		oscinternetservice.Configure,
+		oscdhcoption.Configure,
+		oscsubnet.Configure,
+		oscvm.Configure,
+		oscroutetable.Configure,
+		oscsecuritygroup.Configure,
+		oscroute.Configure,
+		oscpublicip.Configure,
+		osckeypair.Configure,
+		oscloadbalancer.Configure,
+		oscnat.Configure,
+		oscvolume.Configure,
+		oscsnapshot.Configure,
+		oscimage.Configure,
+		oscnic.Configure,
+		oscvpn.Configure,
+		oscclientgateway.Configure,
+		oscvirtualgateway.Configure,
 	} {
 		configure(pc)
 	}
