@@ -150,6 +150,7 @@ def main():
         execute_bash_cmd(["rm", "-rf", "apis"], full_local_path, my_env )
         execute_bash_cmd(["rm", "-rf", "packages"], full_local_path, my_env )
         execute_bash_cmd(["rm", "-rf", "internal/controller"], full_local_path, my_env )
+        execute_bash_cmd(["ls", "-la"], full_local_path, my_env )
         execute_bash_cmd(["git", "apply", "./patch/*"], full_local_path, my_env )
         execute_bash_cmd(["make", "submodules"], full_local_path, my_env )
         execute_bash_cmd(["make", "build"], full_local_path, my_env)
