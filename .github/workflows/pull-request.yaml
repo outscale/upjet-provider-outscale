@@ -2,6 +2,8 @@ name: upgrade-terraform
 
 on:
   push:
+#  branches:
+#    - main
     
 jobs:
   upgrade-terraform:

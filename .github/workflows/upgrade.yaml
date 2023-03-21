@@ -1,8 +1,14 @@
 name: upgrade-terraform
 
 on:
-  repository_dispatch:
-    types: [terraform_event]
+  workflow_dispatch:
+    inputs:
+      terraformVersion:
+        description: 'terraform version'
+
+  #repository_dispatch:
+  #  types: [terraform_event]
+
 jobs:
   upgrade-terraform:
     runs-on: ubuntu-20.04
@@ -44,5 +50,8 @@ jobs:
         KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
         git_full_local_path: /tmp/upjet-provider-outscale
         git_password: ${{ secrets.UPJET_TOKEN }}
+        terraform_release_version: ${{ github.event.inputs.terraformVersion }}
+      #  terraform_release_version: ${{ github.event.client_payload.terraform_version }}
+
 
     

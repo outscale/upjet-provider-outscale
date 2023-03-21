@@ -113,13 +113,15 @@ def main():
     get_terraform_version = args.get
 
     my_env = os.environ.copy()
-    terraform_release_version = os.getenv("terraform_release_versio", "v0.8.2")
+    terraform_release_version = os.getenv("terraform_release_version", "v0.8.2")
     terraform_version = terraform_release_version.replace("v","")
     current_branch = "{0}-{1}".format(branch, terraform_version)
     current_commit_msg = "{0}-{1}".format(commit_msg, terraform_version)
     pr_title = "{0} {1}".format(title, terraform_version)
     pr_description = "{0} {1}".format(description, terraform_version)
-    
+    release_title, release_body = get_release(watch_target_projet,password)
+    find_terraform_version = terraform_release_version.replace("v","")
+
     if clone:
         get_branch(remote, full_local_path, current_branch)
         set_config(name, email, full_local_path)
@@ -137,8 +139,8 @@ def main():
             password
         )
     elif update:
-        my_env['TERRAFORM_PROVIDER_VERSION'] = terraform_version
-        my_env['TERRAFORM_NATIVE_PROVIDER_BINARY'] = "terraform-provider-outscale_v{0}".format(terraform_version)
+        my_env['TERRAFORM_PROVIDER_VERSION'] = find_terraform_version
+        my_env['TERRAFORM_NATIVE_PROVIDER_BINARY'] = "terraform-provider-outscale_v{0}".format(find_terraform_version)
         execute_bash_cmd(["mv", "config", "config-save"], full_local_path, my_env)
         execute_bash_cmd(["rm", "-rf", "config"], full_local_path, my_env)
         execute_bash_cmd(["mkdir", "config"], full_local_path, my_env)
@@ -152,8 +154,8 @@ def main():
         execute_bash_cmd(["make", "build"], full_local_path, my_env)
         execute_bash_cmd(["make", "docker-buildx"], full_local_path, my_env)
     elif buildpush:
-        my_env['TERRAFORM_PROVIDER_VERSION'] = terraform_version
-        my_env['TERRAFORM_NATIVE_PROVIDER_BINARY'] = "terraform-provider-outscale_v{0}".format(terraform_version)
+        my_env['TERRAFORM_PROVIDER_VERSION'] = find_terraform_version
+        my_env['TERRAFORM_NATIVE_PROVIDER_BINARY'] = "terraform-provider-outscale_v{0}".format(find_terraform_version)
         execute_bash_cmd(["make", "submodules"], full_local_path, my_env )
         execute_bash_cmd(["make", "build"], full_local_path, my_env)
         execute_bash_cmd(["make", "docker-buildx"], full_local_path, my_env)
