@@ -1,4 +1,4 @@
-name: upgrade-terraform
+name: upgrade-version-terraform
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ on:
   #  types: [terraform_event]
 
 jobs:
-  upgrade-terraform:
+  upgrade-version-terraform:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout uppjet
