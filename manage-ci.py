@@ -103,24 +103,18 @@ def main():
     parser.add_argument("-bp","--buildpush", help="BuildPush", action="store_true")
     parser.add_argument("-et", "--e2etest", help="E2eTest", action="store_true")
     parser.add_argument("-p", "--pullrequest", help="PullRequest", action="store_true")
-    parser.add_argument("-r", "--read", help="ReadTerraformVersion", action="store_true")
     parser.add_argument("-g", "--get", help="GetTerraformVersion", action="store_true")
-    parser.add_argument("-ct", "--compareterraform", help="CompareTerraform", action="store_true")
     parser.add_argument("-u", "--update", help="Update", action="store_true" )
     args = parser.parse_args()
     apply = args.apply
     update = args.update 
-    pullrequest = args.pullrequest
     buildpush = args.buildpush
     clone = args.clone
-    e2etest = args.e2etest
-    read_terraform_version = args.read
-    compare_terraform_version = args.compareterraform
     get_terraform_version = args.get
 
     my_env = os.environ.copy()
-    release_title, release_body = get_release(watch_target_projet,password)
-    terraform_version = release_title.replace("v","")
+    terraform_release_version = os.getenv("terraform_release_versio", "v0.8.2")
+    terraform_version = terraform_release_version.replace("v","")
     current_branch = "{0}-{1}".format(branch, terraform_version)
     current_commit_msg = "{0}-{1}".format(commit_msg, terraform_version)
     pr_title = "{0} {1}".format(title, terraform_version)
@@ -133,7 +127,6 @@ def main():
     elif apply:
         add_and_commit(full_local_path, commit_msg)
         push(full_local_path, current_branch)
-        create_issue("{0}/{1}".format(owner_name,repo_name), password, "Upgrade with terraform {0}".format(release_title), "A new terraform package is released, please look at the release message to add, changes or modify outscale resource \n {0}".format(release_body))
         create_pull_request(
             owner_name,
             repo_name,
@@ -165,20 +158,9 @@ def main():
         execute_bash_cmd(["make", "build"], full_local_path, my_env)
         execute_bash_cmd(["make", "docker-buildx"], full_local_path, my_env)
         execute_bash_cmd(["make", "docker-push"], full_local_path, my_env)
-    elif read_terraform_version:
-        terraform_version = read_file(terraform_version_file)
-        print(terraform_version)
     elif get_terraform_version:
         release_title, release_body = get_release(watch_target_projet,password)
         print(release_title)
-    elif compare_terraform_version:
-        release_title, release_body = get_release(watch_target_projet,password)
-        terraform_version = read_file(terraform_version_file)
    
-        
-    
-
-        
-
 if __name__ == "__main__":
     main()

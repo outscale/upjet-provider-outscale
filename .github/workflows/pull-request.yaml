@@ -1,7 +1,9 @@
 name: upgrade-terraform
 
 on:
-  push:
+  repository_dispatch:
+    types: [some_event]
+    
 jobs:
   upgrade-terraform:
     runs-on: ubuntu-20.04
@@ -52,13 +54,6 @@ jobs:
       env:
         IMG: 127.0.0.1:4242/upjet-provider-outscale:${{ github.sha }}
         DOCKER_BUILDKIT: 1
-        git_full_local_path: /tmp/upjet-provider-outscale
-        git_password: ${{ secrets.UPJET_TOKEN }}
-    - name: Create PR
-      run: make apply
-      shell: bash
-      env:
-        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
         git_full_local_path: /tmp/upjet-provider-outscale
         git_password: ${{ secrets.UPJET_TOKEN }}
     - name: Deploy Cluster
