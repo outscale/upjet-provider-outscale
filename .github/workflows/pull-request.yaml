@@ -1,8 +1,7 @@
 name: upgrade-terraform
 
 on:
-  repository_dispatch:
-    types: [some_event]
+  push:
     
 jobs:
   upgrade-terraform:
