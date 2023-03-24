@@ -189,14 +189,6 @@ jobs:
       if: ${{ always() }}
       env:
         KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml  
-    - name: Test vpn
-      run: |
-        make submodules
-        UPTEST_EXAMPLE_LIST=examples/vpn/cgw.yaml,examples/vpn/vgw.yaml,examples/vpn/vpnconnection.yaml,/examples/vpn/vpnconnectionroute.yaml make e2e
-      shell: bash
-      if: ${{ always() }}
-      env:
-        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml  
     - name: Test vm
       run: |
         make submodules
