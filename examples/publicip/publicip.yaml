@@ -1,0 +1,9 @@
+apiVersion: publicip.upjet-provider-outscale.upbound.io/v1alpha1
+kind: PublicIp
+metadata:
+  name: main
+  namespace: default
+spec:
+  forProvider: {}
+  providerConfigRef:
+    name: default 

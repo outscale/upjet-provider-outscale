@@ -1,0 +1,12 @@
+apiVersion: clientgateway.upjet-provider-outscale.upbound.io/v1alpha1
+kind: ClientGateway
+metadata:
+  name: cgw
+  namespace: default
+spec:
+  forProvider:
+    bgpAsn: 65000
+    connectionType: "ipsec.1"
+    publicIp: "198.18.7.207"
+  providerConfigRef:
+    name: default 

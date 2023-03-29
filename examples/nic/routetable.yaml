@@ -1,0 +1,28 @@
+apiVersion: routetable.upjet-provider-outscale.upbound.io/v1alpha1
+kind: RouteTableLink
+metadata:
+  name: routetablelink
+  namespace: default
+spec:
+  forProvider:
+    subnetIdRef:
+      name: subnet
+    routeTableIdRef:
+      name: routetable
+  providerConfigRef:
+    name: default
+---
+apiVersion: routetable.upjet-provider-outscale.upbound.io/v1alpha1
+kind: RouteTable
+metadata:
+  name: routetable
+  namespace: default
+spec:
+  forProvider:
+    netIdRef: 
+      name: net
+    tags: 
+      - key: Name
+        value: routetable
+  providerConfigRef:
+    name: default 

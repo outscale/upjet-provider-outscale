@@ -1,0 +1,26 @@
+apiVersion: publicip.upjet-provider-outscale.upbound.io/v1alpha1
+kind: PublicIp
+metadata:
+  name: cp-eip
+  namespace: default
+spec:
+  forProvider:
+    tags:
+      - key: Name
+        value: cp-eip
+  providerConfigRef:
+    name: default
+---
+apiVersion: publicip.upjet-provider-outscale.upbound.io/v1alpha1
+kind: PublicIpLink
+metadata:
+  name: cp-eip-link
+  namespace: default
+spec:
+  forProvider:
+    vmIdRef:
+      name: cp-vm
+    publicIpIdRef:
+      name: cp-eip
+  providerConfigRef:
+    name: default

@@ -1,0 +1,27 @@
+apiVersion: internetservice.upjet-provider-outscale.upbound.io/v1alpha1
+kind: InternetServiceLink
+metadata:
+  name: cp-igwlink
+  namespace: default
+spec:
+  forProvider: 
+    internetServiceIdRef:
+      name: cp-igw
+    netIdRef:
+      name: cp-net
+  providerConfigRef:
+    name: default
+---
+apiVersion: internetservice.upjet-provider-outscale.upbound.io/v1alpha1
+kind: InternetService
+metadata:
+  name: cp-igw
+  namespace: default
+spec:
+  forProvider:    
+    tags:
+      - key: Name
+        value: cp-igw
+  providerConfigRef:
+    name: default
+
