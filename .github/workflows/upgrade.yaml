@@ -1,0 +1,60 @@
+name: upgrade-version-terraform
+
+on:
+  repository_dispatch:
+    types: [terraform_event]
+
+jobs:
+  upgrade-version-terraform:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout uppjet
+      uses: actions/checkout@v3
+      with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+    - name: Checkout osc-k8s-rke-cluster
+      uses: actions/checkout@v3
+      with:
+        repository: 'outscale-dev/osc-k8s-rke-cluster'
+        path: "rke-cluster-for-upjet"
+        ref: master
+    - name: Install golang
+      uses: actions/setup-go@v3
+      with:
+        go-version: '1.19.7'
+    - name: Install python version
+      uses: gabrielfalcao/pyenv-action@v11
+      with:
+        default: "3.10"
+        command: pip install -U pip   
+    - name: Install deps
+      run: |
+        sudo pip3 install --ignore-installed -r requirements.txt
+      env:
+        git_full_local_path: /tmp/upjet-provider-outscale
+    - name: Clone Repository
+      run: make clone
+      env:
+        git_full_local_path: /tmp/upjet-provider-outscale
+        git_password: ${{ secrets.UPJET_TOKEN }}
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2 
+    - name: Build Docker Image
+      run: make update
+      env:
+        IMG: 127.0.0.1:4242/upjet-provider-outscale:${{ github.sha }}
+        DOCKER_BUILDKIT: 1
+        git_full_local_path: /tmp/upjet-provider-outscale
+        git_password: ${{ secrets.UPJET_TOKEN }}
+    - name: Create PR
+      run: make apply
+      shell: bash
+      env:
+        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
+        git_full_local_path: /tmp/upjet-provider-outscale
+        git_password: ${{ secrets.UPJET_TOKEN }}
+        terraform_release_version: ${{ github.event.client_payload.terraform_version }}
+
+
+    
