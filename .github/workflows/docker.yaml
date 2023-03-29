@@ -1,0 +1,40 @@
+name: build-docker
+on:
+  push:
+#  branches:
+#    - main
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout upjet-provider-outscale
+      uses: actions/checkout@v3
+      with:
+        repository: 'outscale-vbr/upjet-provider-outscale'
+        ref: 'first-step'
+    - name: Docker login
+      run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+      env:
+        DOCKER_USER: ${{secrets.DOCKER_USER}}
+        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    - name: Setup Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: '1.19.6'
+    - name: Build Provider
+      run: |
+        make submodules
+        make build
+        docker image ls
+        make docker-push
+      env:
+        IMG: ${{ secrets.DOCKER_REGISTRY_REPO }}/upjet-provider-outscale:release
+    - name: Build and push
+      run: |
+        make docker-buildx
+        make docker-push
+        docker image prune -a -f
+      env:
+        IMG: ${{ secrets.DOCKER_REGISTRY_REPO }}/upjet-provider-outscale:${{ github.sha }}
