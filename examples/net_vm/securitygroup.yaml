@@ -1,0 +1,15 @@
+apiVersion: securitygroup.upjet-provider-outscale.upbound.io/v1alpha1
+kind: SecurityGroup
+metadata:
+  name: cp-public-sg
+  namespace: default
+spec:
+  forProvider:
+    securityGroupName: "cp-public-sg"
+    netIdRef: 
+      name: cp-net
+    tags:
+      - key: Name
+        value: cp-public-sg
+  providerConfigRef:
+    name: default 

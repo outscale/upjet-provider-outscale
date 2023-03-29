@@ -1,0 +1,14 @@
+apiVersion: route.upjet-provider-outscale.upbound.io/v1alpha1
+kind: Route
+metadata:
+  name: route
+  namespace: default
+spec:
+  forProvider:
+    destinationIpRange: "0.0.0.0/0"      
+    gatewayIdRef:
+      name: internetservice            
+    routeTableIdRef: 
+      name: routetable
+  providerConfigRef:
+    name: default 

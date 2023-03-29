@@ -1,0 +1,26 @@
+apiVersion: internetservice.upjet-provider-outscale.upbound.io/v1alpha1
+kind: InternetServiceLink
+metadata:
+  name: internetservicelink
+  namespace: default
+spec:
+  forProvider: 
+    internetServiceIdRef:
+      name: internetservice
+    netIdRef:
+      name: net
+  providerConfigRef:
+    name: default
+---
+apiVersion: internetservice.upjet-provider-outscale.upbound.io/v1alpha1
+kind: InternetService
+metadata:
+  name: internetservice
+  namespace: default
+spec:
+  forProvider:    
+    tags:
+      - key: Name
+        value: internetservice
+  providerConfigRef:
+    name: default

@@ -1,0 +1,17 @@
+apiVersion: nat.upjet-provider-outscale.upbound.io/v1alpha1
+kind: Nat
+metadata:
+  name: natservice
+  namespace: default
+spec:
+  deletionPolicy: Delete
+  forProvider:
+    publicIpIdRef:
+      name: eip
+    subnetIdRef:
+      name: subnet-public
+    tags: 
+    - key: Name
+      value: natservice
+  providerConfigRef:
+    name: default
