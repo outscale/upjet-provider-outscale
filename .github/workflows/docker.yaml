@@ -1,8 +1,8 @@
 name: build-docker
 on:
   push:
-#  branches:
-#    - main
+   branches:
+    - main
 jobs:
   build:
     runs-on: ubuntu-22.04
