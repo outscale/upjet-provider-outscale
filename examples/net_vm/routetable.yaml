@@ -1,0 +1,28 @@
+apiVersion: routetable.upjet-provider-outscale.upbound.io/v1alpha1
+kind: RouteTableLink
+metadata:
+  name: cp-rtbl-link
+  namespace: default
+spec:
+  forProvider:
+    subnetIdRef:
+      name: cp-public-subnet
+    routeTableIdRef:
+      name: cp-public-rtb
+  providerConfigRef:
+    name: default
+---
+apiVersion: routetable.upjet-provider-outscale.upbound.io/v1alpha1
+kind: RouteTable
+metadata:
+  name: cp-public-rtb
+  namespace: default
+spec:
+  forProvider:
+    netIdRef: 
+      name: cp-net
+    tags:
+      - key: Name
+        value: cp-public-rtb
+  providerConfigRef:
+    name: default 

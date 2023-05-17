@@ -1,0 +1,65 @@
+apiVersion: loadbalancer.upjet-provider-outscale.upbound.io/v1alpha1
+kind: LoadBalancer
+metadata:
+  name: vpc-lbu
+  namespace: default
+spec:
+  forProvider:
+    loadBalancerName: "vpc-lbu"
+    subnetsRefs:
+      - name: "subnet-private"
+    subnetsSelector:
+      matchControllerRef: true
+      matchLabels:
+        name: "subnet-private"
+    securityGroupsRefs:
+      - name: "sgpublic"
+    securityGroupsSelector:
+      matchControllerRef: true
+      matchLabels:
+        name: "sgpublic"
+    loadBalancerType: "internet-facing"
+    listeners:
+      - backendPort: 8080
+        backendProtocol: "HTTP"
+        loadBalancerPort: 8080
+        loadBalancerProtocol: "HTTP"
+  providerConfigRef:
+    name: default
+---
+apiVersion: loadbalancer.upjet-provider-outscale.upbound.io/v1alpha1
+kind: LoadBalancerAttributes
+metadata:
+  name: lbu
+  namespace: default
+spec:
+  forProvider:
+    loadBalancerName: "vpc-lbu"
+    healthCheck:
+      - healthyThreshold: 5
+        checkInterval: 5
+        path: "/"
+        port: 8080
+        protocol: "HTTP"
+        timeout: 30
+        unhealthyThreshold: 5
+  providerConfigRef:
+    name: default
+---
+apiVersion: loadbalancer.upjet-provider-outscale.upbound.io/v1alpha1
+kind: LoadBalancerVms
+metadata:
+  name: lbu
+  namespace: default
+spec:  
+  forProvider:
+    backendVmIdsRefs:
+      - name: vm      
+    loadBalancerName: "vpc-lbu"
+
+
+    
+
+
+
+

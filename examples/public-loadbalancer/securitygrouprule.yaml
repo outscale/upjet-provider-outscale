@@ -1,0 +1,20 @@
+apiVersion: securitygroup.upjet-provider-outscale.upbound.io/v1alpha1
+kind: SecurityGroupRule
+metadata:
+  name: sgrule
+  namespace: default
+spec:
+  forProvider:
+    flow: "Inbound"
+    rules:
+
+      - fromPortRange: 8080
+        toPortRange: 8080
+        ipProtocol: "tcp"
+        securityGroupsMembers:
+          - securityGroupName: "outscale-elb-sg"  
+            accountId: "874174967275"
+    securityGroupIdRef:
+      name: sg
+  providerConfigRef:
+    name: default

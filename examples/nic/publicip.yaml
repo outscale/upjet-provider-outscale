@@ -1,0 +1,27 @@
+
+apiVersion: publicip.upjet-provider-outscale.upbound.io/v1alpha1
+kind: PublicIp
+metadata:
+  name: eip
+  namespace: default
+spec:
+  forProvider: 
+    tags: 
+      - key: Name
+        value: eip  
+  providerConfigRef:
+    name: default
+---
+apiVersion: publicip.upjet-provider-outscale.upbound.io/v1alpha1
+kind: PublicIpLink
+metadata:
+  name: eiplink
+  namespace: default
+spec:
+  forProvider:
+    vmIdRef:
+      name: vm
+    publicIpIdRef:
+      name: eip
+  providerConfigRef:
+    name: default

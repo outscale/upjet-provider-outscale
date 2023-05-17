@@ -1,0 +1,13 @@
+apiVersion: net.upjet-provider-outscale.upbound.io/v1alpha1
+kind: Net
+metadata:
+  name: cp-net
+  namespace: default
+spec:
+  forProvider:
+    ipRange: "10.0.0.0/16"
+    tags:
+      - key: Name
+        value: cp-net
+  providerConfigRef:
+    name: default

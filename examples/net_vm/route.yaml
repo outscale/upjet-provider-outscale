@@ -1,0 +1,14 @@
+apiVersion: route.upjet-provider-outscale.upbound.io/v1alpha1
+kind: Route
+metadata:
+  name: cp-public-route
+  namespace: default
+spec:
+  forProvider:
+    destinationIpRange: "0.0.0.0/0"      
+    gatewayIdRef:
+      name: cp-igw            
+    routeTableIdRef: 
+      name: cp-public-rtb
+  providerConfigRef:
+    name: default 

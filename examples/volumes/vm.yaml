@@ -1,0 +1,14 @@
+apiVersion: vm.upjet-provider-outscale.upbound.io/v1alpha1
+kind: Vm
+metadata:
+  name: vm
+  namespace: default
+spec:
+  forProvider:
+    imageId: "ami-ec7ef91f"
+    vmType: "tinav4.c1r1p2"
+    keypairName: "crossplane"
+    placementSubregionName: "eu-west-2a"
+    placementTenancy: "default"
+  providerConfigRef:
+    name: default

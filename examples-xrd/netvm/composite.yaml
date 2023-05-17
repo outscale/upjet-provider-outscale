@@ -1,0 +1,281 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: compositenetvm.outscale.foo.bar
+  labels:
+    provider: outscale
+spec:
+  writeConnectionSecretsToNamespace: crossplane-system
+  compositeTypeRef:
+    apiVersion: foo.bar/v1alpha1
+    kind: CompositeNetVm
+  patchSets:
+  - name: Metadata
+    patches:
+    - fromFieldPath: metadata.labels
+    - fromFieldPath: metadata.annotations
+  resources:
+  - name: vm
+    base:
+      apiVersion: vm.upjet-provider-outscale.upbound.io/v1alpha1
+      kind: Vm
+      metadata:
+        labels: 
+          name: cp-vm
+      spec:
+        forProvider:
+          imageId: "ami-ec7ef91f"
+          vmType: "tinav4.c1r1p2"
+          keypairName: "cp-keypair"
+          blockDeviceMappings: 
+            - deviceName: "/dev/sda1"
+              bsu:
+                - volumeSize: 60
+                  volumeType: "gp2"
+                  deleteOnVmDeletion: true      
+          securityGroupIdsSelector:
+            matchControllerRef: true
+            matchLabels:
+              name: cp-public-sg
+          subnetIdSelector:
+            matchControllerRef: true
+            matchLabels:
+              name: cp-public-subnet
+          userData: "IyEvYmluL2Jhc2gKc3VkbyBhcHQgdXBkYXRlIC15IApzdWRvIGFwdCBpbnN0YWxsIC15IGFwdC10cmFuc3BvcnQtaHR0cHMgY2EtY2VydGlmaWNhdGVzIGN1cmwgc29mdHdhcmUtcHJvcGVydGllcy1jb21tb24KY3VybCAtZnNTTCBodHRwczovL2Rvd25sb2FkLmRvY2tlci5jb20vbGludXgvdWJ1bnR1L2dwZyB8IHN1ZG8gYXB0LWtleSBhZGQgLQpzdWRvIGFkZC1hcHQtcmVwb3NpdG9yeSAiZGViIFthcmNoPWFtZDY0XSBodHRwczovL2Rvd25sb2FkLmRvY2tlci5jb20vbGludXgvdWJ1bnR1IGZvY2FsIHN0YWJsZSIKc3VkbyBhcHQgaW5zdGFsbCAteSBkb2NrZXItY2UKc3VkbyBkb2NrZXIgcnVuIC1kIC1wIDgwODA6ODAgdHV0dW0vaGVsbG8td29ybGQ="
+          tags:
+            - key: Name
+              value: cp-vm
+          providerConfigRef:
+            name: default
+      patches:
+      - fromFieldPath: "spec.parameters.imageId"
+        toFieldPath: "spec.forProvider.imageId"
+      - fromFieldPath: "spec.parameters.vmType"
+        toFieldPath: "spec.forProvider.vmType"
+      - fromFieldPath: "spec.parameters.volumeSize"
+        toFieldPath: "spec.forProvider.blockDeviceMappings[0].deviceName.bsu[0].volumeSize"
+      - fromFieldPath: "spec.parameters.volumeType"
+        toFieldPath: "spec.forProvider.blockDeviceMappings[0].deviceName.bsu[0].volumeType"
+  - name: net
+    base:
+      apiVersion: net.upjet-provider-outscale.upbound.io/v1alpha1
+      kind: Net
+      metadata:
+        labels: 
+          name: cp-net
+      spec:
+        forProvider:
+          ipRange: "10.0.0.0/16"
+          tags:
+            - key: Name
+              value: cp-net
+        providerConfigRef:
+          name: default
+      patches:
+      - fromFieldPath: "spec.parameters.ipRange"
+        toFieldPath: "spec.forProvider.ipRange"
+  - name: subnet
+    base:
+      apiVersion: subnet.upjet-provider-outscale.upbound.io/v1alpha1
+      kind: Subnet
+      metadata:
+        labels:
+          name: cp-public-subnet
+      spec:
+        forProvider:
+          ipRange: "10.0.0.0/24"
+          subregionName: "eu-west-2a"
+          netIdSelector: 
+            matchControllerRef: true
+            matchLabels:
+              name: cp-net
+          tags: 
+            - key: Name
+              value: cp-public-subnet
+        providerConfigRef:
+          name: default 
+      patches:
+      - fromFieldPath: "spec.parameters.ipRange"
+        toFieldPath: "spec.forProvider.ipRange"
+  - name: keypair
+    base:
+      apiVersion: keypair.upjet-provider-outscale.upbound.io/v1alpha1
+      kind: Keypair
+      metadata:
+        labels: 
+          name: cp-keypair
+      spec:
+        forProvider:
+          keypairName: "cp-keypair"
+      providerConfigRef:
+        name: default
+  - name: publicIp
+    base:
+      apiVersion: publicip.upjet-provider-outscale.upbound.io/v1alpha1
+      kind: PublicIp
+      metadata:
+        labels:
+          name: cp-eip
+      spec:
+        forProvider: {}
+        providerConfigRef:
+          name: default
+  - name: publicIpLink
+    base:  
+      apiVersion: publicip.upjet-provider-outscale.upbound.io/v1alpha1
+      kind: PublicIpLink
+      metadata:
+        labels:
+          name: cp-eip-link
+      spec:
+        forProvider:
+          vmIdSelector:
+            matchControllerRef: true
+            matchLabels:
+              name: cp-vm
+          publicIpIdSelector:
+            matchControllerRef: true
+            matchLabels:
+              name: cp-eip
+      providerConfigRef:
+        name: default 
+  - name: internetService
+    base:  
+      apiVersion: internetservice.upjet-provider-outscale.upbound.io/v1alpha1
+      kind: InternetService
+      metadata:
+        labels:
+          name: cp-igw
+      spec:
+        forProvider:    
+          tags:
+            - key: Name
+              value: cp-igw
+        providerConfigRef:
+          name: default
+  - name: internetServiceLink
+    base:  
+      apiVersion: internetservice.upjet-provider-outscale.upbound.io/v1alpha1
+      kind: InternetServiceLink
+      metadata:
+        labels:
+          name: cp-igwlink
+      spec:
+        forProvider: 
+          internetServiceIdSelector:
+            matchControllerRef: true
+            matchLabels:
+              name: cp-igw
+          netIdSelector:
+            matchControllerRef: true
+            matchLabels:
+              name: cp-net
+        providerConfigRef:
+          name: default
+  - name: route
+    base:  
+      apiVersion: route.upjet-provider-outscale.upbound.io/v1alpha1
+      kind: Route
+      metadata:
+        labels:  
+          name: cp-public-route
+      spec:
+        forProvider:
+          destinationIpRange: "0.0.0.0/0"      
+          gatewayIdSelector:
+            matchControllerRef: true
+            matchLabels:
+              name: cp-igw
+          routeTableIdSelector:
+            matchControllerRef: true  
+            matchLabels:
+              name: cp-public-rtb       
+        providerConfigRef:
+          name: default 
+  - name: routeTableLinkRouteTableLink
+    base:  
+      apiVersion: routetable.upjet-provider-outscale.upbound.io/v1alpha1
+      kind: RouteTableLink
+      metadata:
+        labels: 
+          name: cp-rtbl-link
+      spec:
+        forProvider:
+          subnetIdSelector:
+            matchControllerRef: true
+            matchLabels:
+              name: cp-public-subnet
+          routeTableIdSelector:
+            matchControllerRef: true
+            matchLabels:
+              name: cp-public-rtb
+        providerConfigRef:
+          name: default
+  - name: routeTable
+    base:  
+      apiVersion: routetable.upjet-provider-outscale.upbound.io/v1alpha1
+      kind: RouteTable
+      metadata:
+        labels: 
+          name: cp-public-rtb
+      spec:
+        forProvider:
+          netIdSelector:
+            matchControllerRef: true
+            matchLabels:
+              name: cp-net
+          tags:
+          - key: Name
+            value: cp-public-rtb
+        providerConfigRef:
+          name: default 
+  - name: securityGroup
+    base: 
+      apiVersion: securitygroup.upjet-provider-outscale.upbound.io/v1alpha1
+      kind: SecurityGroup
+      metadata:
+        labels:  
+          name: cp-public-sg
+      spec:
+        forProvider:
+          securityGroupName: "cp-public-sg"
+          netIdSelector:
+            matchControllerRef: true
+            matchLabels:  
+              name: cp-net
+          tags:
+            - key: Name
+              value: cp-public-sg
+        providerConfigRef:
+          name: default 
+  - name: securityGroupRule
+    base:
+      apiVersion: securitygroup.upjet-provider-outscale.upbound.io/v1alpha1
+      kind: SecurityGroupRule
+      metadata:
+        labels:
+          name: cp-public-sg-rule
+      spec:
+        forProvider:
+          flow: "Inbound"
+          rules:
+            - fromPortRange: 8080
+              toPortRange: 8080
+              ipProtocol: "tcp"
+              ipRanges: 
+              - "0.0.0.0/0"
+          securityGroupIdSelector:
+            matchControllerRef: true
+            matchLabels:  
+              name: cp-public-sg
+        providerConfigRef:
+          name: default 
+      patches:
+      - type: PatchSet
+        patchSetName: Metadata
+      - fromFieldPath: "spec.parameters.ipRanges"
+        toFieldPath: "spec.forProvider.rules[0].ipRanges[0]"
+      - fromFieldPath: "spec.parameters.ipRanges"
+        toFieldPath: "spec.forProvider.rules[1].ipRanges[0]"
+      - fromFieldPath: "spec.parameters.ipRanges"
+        toFieldPath: "spec.forProvider.rules[2].ipRanges[0]"

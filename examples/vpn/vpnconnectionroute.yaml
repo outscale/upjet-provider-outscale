@@ -1,0 +1,12 @@
+apiVersion: vpn.upjet-provider-outscale.upbound.io/v1alpha1
+kind: VpnConnectionRoute
+metadata:
+  name: vpnconnectionroute
+  namespace: default
+spec:
+  forProvider:
+    vpnConnectionIdRef:
+      name: vpnconnection
+    destinationIpRange: "40.0.0.0/16"
+  providerConfigRef:
+    name: default 
