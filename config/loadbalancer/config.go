@@ -11,10 +11,10 @@ func Configure(p *config.Provider) {
 		r.ShortGroup = loadBalancerShortGroup
 		r.Kind = "LoadBalancer"
 		r.References["security_groups"] = config.Reference{
-			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/securitygroup/v1alpha1.SecurityGroup",
+			Type: "github.com/outscale/upjet-provider-outscale/apis/securitygroup/v1alpha1.SecurityGroup",
 		}
 		r.References["subnets"] = config.Reference{
-			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
+			Type: "github.com/outscale/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
 		}
 	})
 	p.AddResourceConfigurator("outscale_load_balancer_attributes", func(r *config.Resource) {
@@ -37,7 +37,7 @@ func Configure(p *config.Provider) {
 		r.ShortGroup = loadBalancerShortGroup
 		r.Kind = "LoadBalancerVms"
 		r.References["backend_vm_ids"] = config.Reference{
-			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/vm/v1alpha1.Vm",
+			Type: "github.com/outscale/upjet-provider-outscale/apis/vm/v1alpha1.Vm",
 		}
 	})
 

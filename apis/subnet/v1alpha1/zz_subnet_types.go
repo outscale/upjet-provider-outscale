@@ -33,7 +33,7 @@ type SubnetParameters struct {
 	// +kubebuilder:validation:Optional
 	MapPublicIPOnLaunch *bool `json:"mapPublicIpOnLaunch,omitempty" tf:"map_public_ip_on_launch,omitempty"`
 
-	// +crossplane:generate:reference:type=github.com/outscale-vbr/upjet-provider-outscale/apis/net/v1alpha1.Net
+	// +crossplane:generate:reference:type=github.com/outscale/upjet-provider-outscale/apis/net/v1alpha1.Net
 	// +kubebuilder:validation:Optional
 	NetID *string `json:"netId,omitempty" tf:"net_id,omitempty"`
 

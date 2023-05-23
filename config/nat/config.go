@@ -11,10 +11,10 @@ func Configure(p *config.Provider) {
 		r.ShortGroup = natShortGroup
 		r.Kind = "Nat"
 		r.References["public_ip_id"] = config.Reference{
-			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/publicip/v1alpha1.PublicIp",
+			Type: "github.com/outscale/upjet-provider-outscale/apis/publicip/v1alpha1.PublicIp",
 		}
 		r.References["subnet_id"] = config.Reference{
-			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
+			Type: "github.com/outscale/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
 		}
 	})
 }

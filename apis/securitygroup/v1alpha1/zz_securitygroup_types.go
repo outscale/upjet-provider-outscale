@@ -62,7 +62,7 @@ type SecurityGroupParameters struct {
 	// +kubebuilder:validation:Optional
 	Description *string `json:"description,omitempty" tf:"description,omitempty"`
 
-	// +crossplane:generate:reference:type=github.com/outscale-vbr/upjet-provider-outscale/apis/net/v1alpha1.Net
+	// +crossplane:generate:reference:type=github.com/outscale/upjet-provider-outscale/apis/net/v1alpha1.Net
 	// +kubebuilder:validation:Optional
 	NetID *string `json:"netId,omitempty" tf:"net_id,omitempty"`
 

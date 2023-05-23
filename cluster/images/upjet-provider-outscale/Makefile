@@ -11,7 +11,7 @@ include ../../../build/makelib/imagelight.mk
 # ====================================================================================
 # Targets
 
-IMG_FROM ?= vbaer/upjet-provider-outscale:release
+IMG_FROM ?= outscale/upjet-provider-outscale:release
 img.build:
 	@$(INFO) docker build $(IMG)
 	@$(MAKE) BUILD_ARGS="--load" img.build.shared

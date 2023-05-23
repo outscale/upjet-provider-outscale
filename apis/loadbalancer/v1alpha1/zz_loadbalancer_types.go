@@ -88,7 +88,7 @@ type LoadBalancerParameters struct {
 	// +kubebuilder:validation:Optional
 	SecuredCookies *bool `json:"securedCookies,omitempty" tf:"secured_cookies,omitempty"`
 
-	// +crossplane:generate:reference:type=github.com/outscale-vbr/upjet-provider-outscale/apis/securitygroup/v1alpha1.SecurityGroup
+	// +crossplane:generate:reference:type=github.com/outscale/upjet-provider-outscale/apis/securitygroup/v1alpha1.SecurityGroup
 	// +kubebuilder:validation:Optional
 	SecurityGroups []*string `json:"securityGroups,omitempty" tf:"security_groups,omitempty"`
 
@@ -100,7 +100,7 @@ type LoadBalancerParameters struct {
 	// +kubebuilder:validation:Optional
 	SecurityGroupsSelector *v1.Selector `json:"securityGroupsSelector,omitempty" tf:"-"`
 
-	// +crossplane:generate:reference:type=github.com/outscale-vbr/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet
+	// +crossplane:generate:reference:type=github.com/outscale/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet
 	// +kubebuilder:validation:Optional
 	Subnets []*string `json:"subnets,omitempty" tf:"subnets,omitempty"`
 

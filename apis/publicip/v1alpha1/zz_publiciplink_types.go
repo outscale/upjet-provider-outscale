@@ -51,7 +51,7 @@ type PublicIpLinkParameters struct {
 	// +kubebuilder:validation:Optional
 	PublicIPIDSelector *v1.Selector `json:"publicIpIdSelector,omitempty" tf:"-"`
 
-	// +crossplane:generate:reference:type=github.com/outscale-vbr/upjet-provider-outscale/apis/vm/v1alpha1.Vm
+	// +crossplane:generate:reference:type=github.com/outscale/upjet-provider-outscale/apis/vm/v1alpha1.Vm
 	// +kubebuilder:validation:Optional
 	VMID *string `json:"vmId,omitempty" tf:"vm_id,omitempty"`
 

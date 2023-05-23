@@ -11,7 +11,7 @@ func Configure(p *config.Provider) {
 		r.ShortGroup = securityGroupShortGroup
 		r.Kind = "SecurityGroup"
 		r.References["net_id"] = config.Reference{
-			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/net/v1alpha1.Net",
+			Type: "github.com/outscale/upjet-provider-outscale/apis/net/v1alpha1.Net",
 		}
 	})
 	p.AddResourceConfigurator("outscale_security_group_rule", func(r *config.Resource) {

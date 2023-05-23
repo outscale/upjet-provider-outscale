@@ -11,13 +11,13 @@ func Configure(p *config.Provider) {
 		r.ShortGroup = routeShortGroup
 		r.Kind = "Route"
 		r.References["gateway_id"] = config.Reference{
-			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/internetservice/v1alpha1.InternetService",
+			Type: "github.com/outscale/upjet-provider-outscale/apis/internetservice/v1alpha1.InternetService",
 		}
 		r.References["route_table_id"] = config.Reference{
-			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/routetable/v1alpha1.RouteTable",
+			Type: "github.com/outscale/upjet-provider-outscale/apis/routetable/v1alpha1.RouteTable",
 		}
 		r.References["nat_service_id"] = config.Reference{
-			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/nat/v1alpha1.Nat",
+			Type: "github.com/outscale/upjet-provider-outscale/apis/nat/v1alpha1.Nat",
 		}
 	})
 }

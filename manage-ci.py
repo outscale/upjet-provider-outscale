@@ -81,14 +81,14 @@ def read_file(filename):
 
 def main():
 
-    name = os.getenv('git_username', "outscale-vbr")
+    name = os.getenv('git_username', "outscale")
     email = os.getenv('git_email',"vincent.baer@outscale.com")
-    username = os.getenv('git_username',"outscale-vbr")
+    username = os.getenv('git_username',"outscale")
     full_local_path = os.getenv('git_full_local_path', "/home/outscale/crossplane")
     password = os.getenv('git_password',"token")
     branch = os.getenv('git_branch',"release-terraform")
     commit_msg = os.getenv('git_commit',"Update with a new version of terraform")
-    owner_name = os.getenv('git_owner', "outscale-vbr")
+    owner_name = os.getenv('git_owner', "outscale")
     repo_name = os.getenv('git_repo', "upjet-provider-outscale")
     remote = f"https://{username}:{password}@github.com/{owner_name}/{repo_name}.git"
     terraform_version_file = os.getenv("terraform_version_file", "./terraform_version")

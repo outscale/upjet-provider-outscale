@@ -16,7 +16,7 @@ func Configure(p *config.Provider) {
 		r.ShortGroup = volumeShortGroup
 		r.Kind = "VolumesLink"
 		r.References["vm_id"] = config.Reference{
-			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/vm/v1alpha1.Vm",
+			Type: "github.com/outscale/upjet-provider-outscale/apis/vm/v1alpha1.Vm",
 		}
 		r.References["volume_id"] = config.Reference{
 			Type: "Volume",

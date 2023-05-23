@@ -37,7 +37,7 @@ type RouteParameters struct {
 	// +kubebuilder:validation:Required
 	DestinationIPRange *string `json:"destinationIpRange" tf:"destination_ip_range,omitempty"`
 
-	// +crossplane:generate:reference:type=github.com/outscale-vbr/upjet-provider-outscale/apis/internetservice/v1alpha1.InternetService
+	// +crossplane:generate:reference:type=github.com/outscale/upjet-provider-outscale/apis/internetservice/v1alpha1.InternetService
 	// +kubebuilder:validation:Optional
 	GatewayID *string `json:"gatewayId,omitempty" tf:"gateway_id,omitempty"`
 
@@ -49,7 +49,7 @@ type RouteParameters struct {
 	// +kubebuilder:validation:Optional
 	GatewayIDSelector *v1.Selector `json:"gatewayIdSelector,omitempty" tf:"-"`
 
-	// +crossplane:generate:reference:type=github.com/outscale-vbr/upjet-provider-outscale/apis/nat/v1alpha1.Nat
+	// +crossplane:generate:reference:type=github.com/outscale/upjet-provider-outscale/apis/nat/v1alpha1.Nat
 	// +kubebuilder:validation:Optional
 	NATServiceID *string `json:"natServiceId,omitempty" tf:"nat_service_id,omitempty"`
 
@@ -67,7 +67,7 @@ type RouteParameters struct {
 	// +kubebuilder:validation:Optional
 	NicID *string `json:"nicId,omitempty" tf:"nic_id,omitempty"`
 
-	// +crossplane:generate:reference:type=github.com/outscale-vbr/upjet-provider-outscale/apis/routetable/v1alpha1.RouteTable
+	// +crossplane:generate:reference:type=github.com/outscale/upjet-provider-outscale/apis/routetable/v1alpha1.RouteTable
 	// +kubebuilder:validation:Optional
 	RouteTableID *string `json:"routeTableId,omitempty" tf:"route_table_id,omitempty"`
 

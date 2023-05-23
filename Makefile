@@ -3,7 +3,7 @@
 
 
 PROJECT_NAME := upjet-provider-outscale
-PROJECT_REPO := github.com/outscale-vbr/$(PROJECT_NAME)
+PROJECT_REPO := github.com/outscale/$(PROJECT_NAME)
 UPJET_SECRET_SOURCE := providerconfig/secret.yaml.tmpl
 UPJET_SECRET_FILE := providerconfig/secret.yaml
 UPJET_PROVIDER_SOURCE := providerconfig/provider.yaml.tmpl

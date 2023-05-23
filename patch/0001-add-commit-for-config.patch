@@ -108,7 +108,7 @@ index 0000000..5b5349e
 +			Type: "Image",
 +		}
 +		r.References["vm_id"] = config.Reference{
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/vm/v1alpha1.Vm",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/vm/v1alpha1.Vm",
 +		}
 +
 +	})
@@ -154,7 +154,7 @@ index 0000000..7b1c39b
 +			Type: "InternetService",
 +		}
 +		r.References["net_id"] = config.Reference {
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/net/v1alpha1.Net",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/net/v1alpha1.Net",
 +		}
 +	})
 +}
@@ -197,10 +197,10 @@ index 0000000..6a86ec7
 +		r.ShortGroup = loadBalancerShortGroup
 +		r.Kind = "LoadBalancer"
 +		r.References["security_groups"] = config.Reference {
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/securitygroup/v1alpha1.SecurityGroup",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/securitygroup/v1alpha1.SecurityGroup",
 +		}
 +		r.References["subnets"] = config.Reference {
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
 +		}
 +	})
 +	p.AddResourceConfigurator("outscale_load_balancer_attributes", func(r *config.Resource) {
@@ -223,7 +223,7 @@ index 0000000..6a86ec7
 +		r.ShortGroup = loadBalancerShortGroup
 +		r.Kind = "LoadBalancerVms"
 +		r.References["backend_vm_ids"] = config.Reference{
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/vm/v1alpha1.Vm",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/vm/v1alpha1.Vm",
 +		}
 +	})
 +
@@ -248,10 +248,10 @@ index 0000000..b0ea7c6
 +		r.ShortGroup = natShortGroup
 +		r.Kind = "Nat"
 +		r.References["public_ip_id"] = config.Reference{
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/publicip/v1alpha1.PublicIp",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/publicip/v1alpha1.PublicIp",
 +		}
 +		r.References["subnet_id"] = config.Reference{
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
 +		}
 +	})
 +}
@@ -321,10 +321,10 @@ index 0000000..1990f67
 +		r.ShortGroup = nicShortGroup
 +		r.Kind = "Nic"
 +		r.References["security_group_ids"] = config.Reference{
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/securitygroup/v1alpha1.SecurityGroup",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/securitygroup/v1alpha1.SecurityGroup",
 +		}
 +		r.References["subnet_id"] = config.Reference{
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
 +		}
 +	})
 +	p.AddResourceConfigurator("outscale_nic_private_ip", func(r *config.Resource) {
@@ -363,7 +363,7 @@ index 0000000..0a5ef44
 +			Type: "PublicIp",
 +		}
 +		r.References["vm_id"] = config.Reference{
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/vm/v1alpha1.Vm",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/vm/v1alpha1.Vm",
 +		}
 +	})
 +}
@@ -387,13 +387,13 @@ index 0000000..07d800e
 +		r.ShortGroup = routeShortGroup
 +		r.Kind = "Route"
 +		r.References["gateway_id"] = config.Reference {
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/internetservice/v1alpha1.InternetService",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/internetservice/v1alpha1.InternetService",
 +		}
 +		r.References["route_table_id"] = config.Reference {
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/routetable/v1alpha1.RouteTable",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/routetable/v1alpha1.RouteTable",
 +		}
 +		r.References["nat_service_id"] = config.Reference {
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/nat/v1alpha1.Nat",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/nat/v1alpha1.Nat",
 +		}
 +	})
 +}
@@ -417,7 +417,7 @@ index 0000000..94fdc2c
 +		r.ShortGroup = routeTableShortGroup
 +		r.Kind = "RouteTable"
 +		r.References["net_id"] = config.Reference{
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/net/v1alpha1.Net",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/net/v1alpha1.Net",
 +		}
 +	})
 +	p.AddResourceConfigurator("outscale_route_table_link", func(r *config.Resource) {
@@ -428,7 +428,7 @@ index 0000000..94fdc2c
 +			Type: "RouteTable",
 +		}
 +		r.References["subnet_id"] = config.Reference{
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
 +		}
 +	})
 +}
@@ -452,7 +452,7 @@ index 0000000..d80224e
 +		r.ShortGroup = securityGroupShortGroup
 +		r.Kind = "SecurityGroup"
 +		r.References["net_id"] = config.Reference{
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/net/v1alpha1.Net",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/net/v1alpha1.Net",
 +		}
 +	})
 +	p.AddResourceConfigurator("outscale_security_group_rule", func(r *config.Resource) {
@@ -488,7 +488,7 @@ index 0000000..bf94189
 +			Type: "Snapshot",
 +		}
 +		r.References["volume_id"] = config.Reference {
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/volume/v1alpha1.Volume",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/volume/v1alpha1.Volume",
 +        }
 +	})
 +	p.AddResourceConfigurator("outscale_snapshot_export_task", func(r *config.Resource) {
@@ -528,7 +528,7 @@ index 0000000..7cee07e
 +		r.ShortGroup = subnetShortGroup
 +		r.Kind = "Subnet"
 +		r.References["net_id"] = config.Reference {
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/net/v1alpha1.Net",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/net/v1alpha1.Net",
 +		}
 +	})
 +}
@@ -572,16 +572,16 @@ index 0000000..5a8b02a
 +		r.ShortGroup = vmShortGroup
 +		r.Kind = "Vm"
 +		r.References["security_group_ids"] = config.Reference {
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/securitygroup/v1alpha1.SecurityGroup",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/securitygroup/v1alpha1.SecurityGroup",
 +		}
 +		r.References["subnet_id"] = config.Reference {
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
 +		}
 +		r.References["nics.subnet_id"] = config.Reference {
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
 +		}
 +		r.References["nics.nic_id"] = config.Reference {
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/nic/v1alpha1.Nic",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/nic/v1alpha1.Nic",
 +		}
 +	})
 +}
@@ -610,7 +610,7 @@ index 0000000..5629f66
 +		r.ShortGroup = volumeShortGroup
 +		r.Kind = "VolumesLink"		
 +		r.References["vm_id"] = config.Reference{
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/vm/v1alpha1.Vm",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/vm/v1alpha1.Vm",
 +		}
 +		r.References["volume_id"] = config.Reference{
 +			Type: "Volume",
@@ -635,10 +635,10 @@ index 0000000..fea22ff
 +		r.ShortGroup = vpnShortGroup
 +		r.Kind = "VpnConnection"
 +		r.References["client_gateway_id"] = config.Reference{
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/clientgateway/v1alpha1.ClientGateway",
++			Type: "github.com/outscale/upjet-provider-outscale/apis/clientgateway/v1alpha1.ClientGateway",
 +		}
 +		r.References["virtual_gateway_id"] = config.Reference{
-+			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/virtualgateway/v1alpha1.VirtualGateway",		}
++			Type: "github.com/outscale/upjet-provider-outscale/apis/virtualgateway/v1alpha1.VirtualGateway",		}
 +	})
 +	p.AddResourceConfigurator("outscale_vpn_connection_route", func(r *config.Resource) {
 +		r.ExternalName = config.IdentifierFromProvider

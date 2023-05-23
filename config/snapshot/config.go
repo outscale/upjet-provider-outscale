@@ -13,7 +13,7 @@ func Configure(p *config.Provider) {
 			Type: "Snapshot",
 		}
 		r.References["volume_id"] = config.Reference{
-			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/volume/v1alpha1.Volume",
+			Type: "github.com/outscale/upjet-provider-outscale/apis/volume/v1alpha1.Volume",
 		}
 	})
 	p.AddResourceConfigurator("outscale_snapshot_export_task", func(r *config.Resource) {

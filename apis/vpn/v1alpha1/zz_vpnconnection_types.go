@@ -69,7 +69,7 @@ type VpnConnectionObservation struct {
 
 type VpnConnectionParameters struct {
 
-	// +crossplane:generate:reference:type=github.com/outscale-vbr/upjet-provider-outscale/apis/clientgateway/v1alpha1.ClientGateway
+	// +crossplane:generate:reference:type=github.com/outscale/upjet-provider-outscale/apis/clientgateway/v1alpha1.ClientGateway
 	// +kubebuilder:validation:Optional
 	ClientGatewayID *string `json:"clientGatewayId,omitempty" tf:"client_gateway_id,omitempty"`
 
@@ -90,7 +90,7 @@ type VpnConnectionParameters struct {
 	// +kubebuilder:validation:Optional
 	Tags []TagsParameters `json:"tags,omitempty" tf:"tags,omitempty"`
 
-	// +crossplane:generate:reference:type=github.com/outscale-vbr/upjet-provider-outscale/apis/virtualgateway/v1alpha1.VirtualGateway
+	// +crossplane:generate:reference:type=github.com/outscale/upjet-provider-outscale/apis/virtualgateway/v1alpha1.VirtualGateway
 	// +kubebuilder:validation:Optional
 	VirtualGatewayID *string `json:"virtualGatewayId,omitempty" tf:"virtual_gateway_id,omitempty"`
 

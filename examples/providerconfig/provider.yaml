@@ -3,4 +3,4 @@ kind: Provider
 metadata:
   name: upjet-provider-outscale
 spec:
-  package: vbaer/upjet-provider-outscale:dev
+  package: outscale/upjet-provider-outscale:dev

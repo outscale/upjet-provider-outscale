@@ -11,7 +11,7 @@ func Configure(p *config.Provider) {
 		r.ShortGroup = routeTableShortGroup
 		r.Kind = "RouteTable"
 		r.References["net_id"] = config.Reference{
-			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/net/v1alpha1.Net",
+			Type: "github.com/outscale/upjet-provider-outscale/apis/net/v1alpha1.Net",
 		}
 	})
 	p.AddResourceConfigurator("outscale_route_table_link", func(r *config.Resource) {
@@ -22,7 +22,7 @@ func Configure(p *config.Provider) {
 			Type: "RouteTable",
 		}
 		r.References["subnet_id"] = config.Reference{
-			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
+			Type: "github.com/outscale/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet",
 		}
 	})
 }
