@@ -29,7 +29,7 @@ type NatObservation struct {
 
 type NatParameters struct {
 
-	// +crossplane:generate:reference:type=github.com/outscale-vbr/upjet-provider-outscale/apis/publicip/v1alpha1.PublicIp
+	// +crossplane:generate:reference:type=github.com/outscale/upjet-provider-outscale/apis/publicip/v1alpha1.PublicIp
 	// +kubebuilder:validation:Optional
 	PublicIPID *string `json:"publicIpId,omitempty" tf:"public_ip_id,omitempty"`
 
@@ -41,7 +41,7 @@ type NatParameters struct {
 	// +kubebuilder:validation:Optional
 	PublicIPIDSelector *v1.Selector `json:"publicIpIdSelector,omitempty" tf:"-"`
 
-	// +crossplane:generate:reference:type=github.com/outscale-vbr/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet
+	// +crossplane:generate:reference:type=github.com/outscale/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet
 	// +kubebuilder:validation:Optional
 	SubnetID *string `json:"subnetId,omitempty" tf:"subnet_id,omitempty"`
 

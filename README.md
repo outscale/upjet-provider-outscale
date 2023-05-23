@@ -22,7 +22,7 @@ kind: Provider
 metadata:
   name: upjet-provider-outscale
 spec:
-  package: vbaer/upjet-provider-outscale:v0.1.0
+  package: outscale/upjet-provider-outscale:v0.1.0
 EOF
 ```
 ### Using the provider
@@ -38,6 +38,10 @@ make providerconfig
 Check [CONTRIBUTING.md](./CONTRIBUTING.md) for more details.
 ## Developing
 
+Get submodules:
+```
+git submodule update --init --recursive
+```
 Run code-generation pipeline:
 ```console
 go run cmd/generator/main.go "$PWD"
@@ -64,4 +68,4 @@ make build
 ## Report a Bug
 
 For filing bugs, suggesting improvements, or requesting new features, please
-open an [issue](https://github.com/outscale-vbr/upjet-provider-outscale/issues).
+open an [issue](https://github.com/outscale/upjet-provider-outscale/issues).

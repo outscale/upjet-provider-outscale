@@ -73,7 +73,7 @@ type SnapshotParameters struct {
 	// +kubebuilder:validation:Optional
 	Tags []TagsParameters `json:"tags,omitempty" tf:"tags,omitempty"`
 
-	// +crossplane:generate:reference:type=github.com/outscale-vbr/upjet-provider-outscale/apis/volume/v1alpha1.Volume
+	// +crossplane:generate:reference:type=github.com/outscale/upjet-provider-outscale/apis/volume/v1alpha1.Volume
 	// +kubebuilder:validation:Optional
 	VolumeID *string `json:"volumeId,omitempty" tf:"volume_id,omitempty"`
 

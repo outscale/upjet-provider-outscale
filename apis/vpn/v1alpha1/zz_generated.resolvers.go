@@ -8,8 +8,8 @@ package v1alpha1
 import (
 	"context"
 	reference "github.com/crossplane/crossplane-runtime/pkg/reference"
-	v1alpha1 "github.com/outscale-vbr/upjet-provider-outscale/apis/clientgateway/v1alpha1"
-	v1alpha11 "github.com/outscale-vbr/upjet-provider-outscale/apis/virtualgateway/v1alpha1"
+	v1alpha1 "github.com/outscale/upjet-provider-outscale/apis/clientgateway/v1alpha1"
+	v1alpha11 "github.com/outscale/upjet-provider-outscale/apis/virtualgateway/v1alpha1"
 	errors "github.com/pkg/errors"
 	client "sigs.k8s.io/controller-runtime/pkg/client"
 )

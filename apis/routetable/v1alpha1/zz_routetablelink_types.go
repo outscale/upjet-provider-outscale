@@ -37,7 +37,7 @@ type RouteTableLinkParameters struct {
 	// +kubebuilder:validation:Optional
 	RouteTableIDSelector *v1.Selector `json:"routeTableIdSelector,omitempty" tf:"-"`
 
-	// +crossplane:generate:reference:type=github.com/outscale-vbr/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet
+	// +crossplane:generate:reference:type=github.com/outscale/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet
 	// +kubebuilder:validation:Optional
 	SubnetID *string `json:"subnetId,omitempty" tf:"subnet_id,omitempty"`
 

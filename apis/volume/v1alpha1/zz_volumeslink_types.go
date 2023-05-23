@@ -32,7 +32,7 @@ type VolumesLinkParameters struct {
 	// +kubebuilder:validation:Optional
 	ForceUnlink *bool `json:"forceUnlink,omitempty" tf:"force_unlink,omitempty"`
 
-	// +crossplane:generate:reference:type=github.com/outscale-vbr/upjet-provider-outscale/apis/vm/v1alpha1.Vm
+	// +crossplane:generate:reference:type=github.com/outscale/upjet-provider-outscale/apis/vm/v1alpha1.Vm
 	// +kubebuilder:validation:Optional
 	VMID *string `json:"vmId,omitempty" tf:"vm_id,omitempty"`
 

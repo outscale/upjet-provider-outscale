@@ -10,8 +10,8 @@ jobs:
     - name: Checkout upjet-provider-outscale
       uses: actions/checkout@v3
       with:
-        repository: 'outscale-vbr/upjet-provider-outscale'
-        ref: 'first-step'
+        repository: 'outscale/upjet-provider-outscale'
+        ref: 'main'
     - name: Docker login
       run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
       env:

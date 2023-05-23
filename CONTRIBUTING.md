@@ -1,6 +1,6 @@
 # Opening an issue
 
-Feel free to open a [Github issue](https://github.com/outscale-vbr/upjet-outscale/issues) and explain your problem.
+Feel free to open a [Github issue](https://github.com/outscale/upjet-outscale/issues) and explain your problem.
 
 Please provide at least those informations:
 - upjet version

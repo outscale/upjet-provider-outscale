@@ -24,12 +24,12 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	"github.com/outscale-vbr/upjet-provider-outscale/apis"
-	"github.com/outscale-vbr/upjet-provider-outscale/apis/v1alpha1"
-	"github.com/outscale-vbr/upjet-provider-outscale/config"
-	"github.com/outscale-vbr/upjet-provider-outscale/internal/clients"
-	"github.com/outscale-vbr/upjet-provider-outscale/internal/controller"
-	"github.com/outscale-vbr/upjet-provider-outscale/internal/features"
+	"github.com/outscale/upjet-provider-outscale/apis"
+	"github.com/outscale/upjet-provider-outscale/apis/v1alpha1"
+	"github.com/outscale/upjet-provider-outscale/config"
+	"github.com/outscale/upjet-provider-outscale/internal/clients"
+	"github.com/outscale/upjet-provider-outscale/internal/controller"
+	"github.com/outscale/upjet-provider-outscale/internal/features"
 )
 
 func main() {

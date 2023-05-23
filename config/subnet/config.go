@@ -11,7 +11,7 @@ func Configure(p *config.Provider) {
 		r.ShortGroup = subnetShortGroup
 		r.Kind = "Subnet"
 		r.References["net_id"] = config.Reference{
-			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/net/v1alpha1.Net",
+			Type: "github.com/outscale/upjet-provider-outscale/apis/net/v1alpha1.Net",
 		}
 	})
 }

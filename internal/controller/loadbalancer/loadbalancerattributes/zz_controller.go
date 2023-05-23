@@ -18,7 +18,7 @@ import (
 	"github.com/upbound/upjet/pkg/terraform"
 	ctrl "sigs.k8s.io/controller-runtime"
 
-	v1alpha1 "github.com/outscale-vbr/upjet-provider-outscale/apis/loadbalancer/v1alpha1"
+	v1alpha1 "github.com/outscale/upjet-provider-outscale/apis/loadbalancer/v1alpha1"
 )
 
 // Setup adds a controller that reconciles LoadBalancerAttributes managed resources.

@@ -21,7 +21,7 @@ type LoadBalancerVmsObservation struct {
 
 type LoadBalancerVmsParameters struct {
 
-	// +crossplane:generate:reference:type=github.com/outscale-vbr/upjet-provider-outscale/apis/vm/v1alpha1.Vm
+	// +crossplane:generate:reference:type=github.com/outscale/upjet-provider-outscale/apis/vm/v1alpha1.Vm
 	// +kubebuilder:validation:Optional
 	BackendVMIds []*string `json:"backendVmIds,omitempty" tf:"backend_vm_ids,omitempty"`
 

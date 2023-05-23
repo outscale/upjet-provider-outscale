@@ -122,7 +122,7 @@ type NicsParameters struct {
 	// +kubebuilder:validation:Required
 	DeviceNumber *float64 `json:"deviceNumber" tf:"device_number,omitempty"`
 
-	// +crossplane:generate:reference:type=github.com/outscale-vbr/upjet-provider-outscale/apis/nic/v1alpha1.Nic
+	// +crossplane:generate:reference:type=github.com/outscale/upjet-provider-outscale/apis/nic/v1alpha1.Nic
 	// +kubebuilder:validation:Optional
 	NicID *string `json:"nicId,omitempty" tf:"nic_id,omitempty"`
 
@@ -143,7 +143,7 @@ type NicsParameters struct {
 	// +kubebuilder:validation:Optional
 	SecurityGroupIds []*string `json:"securityGroupIds,omitempty" tf:"security_group_ids,omitempty"`
 
-	// +crossplane:generate:reference:type=github.com/outscale-vbr/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet
+	// +crossplane:generate:reference:type=github.com/outscale/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet
 	// +kubebuilder:validation:Optional
 	SubnetID *string `json:"subnetId,omitempty" tf:"subnet_id,omitempty"`
 
@@ -292,7 +292,7 @@ type VmParameters struct {
 	// +kubebuilder:validation:Optional
 	PrivateIps []*string `json:"privateIps,omitempty" tf:"private_ips,omitempty"`
 
-	// +crossplane:generate:reference:type=github.com/outscale-vbr/upjet-provider-outscale/apis/securitygroup/v1alpha1.SecurityGroup
+	// +crossplane:generate:reference:type=github.com/outscale/upjet-provider-outscale/apis/securitygroup/v1alpha1.SecurityGroup
 	// +kubebuilder:validation:Optional
 	SecurityGroupIds []*string `json:"securityGroupIds,omitempty" tf:"security_group_ids,omitempty"`
 
@@ -310,7 +310,7 @@ type VmParameters struct {
 	// +kubebuilder:validation:Optional
 	State *string `json:"state,omitempty" tf:"state,omitempty"`
 
-	// +crossplane:generate:reference:type=github.com/outscale-vbr/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet
+	// +crossplane:generate:reference:type=github.com/outscale/upjet-provider-outscale/apis/subnet/v1alpha1.Subnet
 	// +kubebuilder:validation:Optional
 	SubnetID *string `json:"subnetId,omitempty" tf:"subnet_id,omitempty"`
 

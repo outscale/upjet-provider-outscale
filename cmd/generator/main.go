@@ -11,7 +11,7 @@ import (
 
 	"github.com/upbound/upjet/pkg/pipeline"
 
-	"github.com/outscale-vbr/upjet-provider-outscale/config"
+	"github.com/outscale/upjet-provider-outscale/config"
 )
 
 func main() {

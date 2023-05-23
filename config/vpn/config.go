@@ -10,10 +10,10 @@ func Configure(p *config.Provider) {
 		r.ShortGroup = vpnShortGroup
 		r.Kind = "VpnConnection"
 		r.References["client_gateway_id"] = config.Reference{
-			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/clientgateway/v1alpha1.ClientGateway",
+			Type: "github.com/outscale/upjet-provider-outscale/apis/clientgateway/v1alpha1.ClientGateway",
 		}
 		r.References["virtual_gateway_id"] = config.Reference{
-			Type: "github.com/outscale-vbr/upjet-provider-outscale/apis/virtualgateway/v1alpha1.VirtualGateway"}
+			Type: "github.com/outscale/upjet-provider-outscale/apis/virtualgateway/v1alpha1.VirtualGateway"}
 	})
 	p.AddResourceConfigurator("outscale_vpn_connection_route", func(r *config.Resource) {
 		r.ExternalName = config.IdentifierFromProvider
