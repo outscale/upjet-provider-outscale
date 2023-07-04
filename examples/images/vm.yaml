@@ -7,7 +7,7 @@ metadata:
     name: vm
 spec:
   forProvider:
-    imageId: "ami-ec7ef91f"
+    imageId: "ami-bbe870d5"
     vmType: "tinav5.c4r8p1"
     keypairName: "cp-keypair"
     blockDeviceMappings: 
@@ -16,7 +16,7 @@ spec:
           - volumeSize: 60
             volumeType: "gp2"
             deleteOnVmDeletion: true      
-    placementSubregionName: "eu-west-2a"
+    placementSubregionName: "us-east-2a"
     placementTenancy: "default"
     userData: "IyEvYmluL2Jhc2gKc3VkbyBhcHQgdXBkYXRlIC15IApzdWRvIGFwdCBpbnN0YWxsIC15IGFwdC10cmFuc3BvcnQtaHR0cHMgY2EtY2VydGlmaWNhdGVzIGN1cmwgc29mdHdhcmUtcHJvcGVydGllcy1jb21tb24KY3VybCAtZnNTTCBodHRwczovL2Rvd25sb2FkLmRvY2tlci5jb20vbGludXgvdWJ1bnR1L2dwZyB8IHN1ZG8gYXB0LWtleSBhZGQgLQpzdWRvIGFkZC1hcHQtcmVwb3NpdG9yeSAiZGViIFthcmNoPWFtZDY0XSBodHRwczovL2Rvd25sb2FkLmRvY2tlci5jb20vbGludXgvdWJ1bnR1IGZvY2FsIHN0YWJsZSIKc3VkbyBhcHQgaW5zdGFsbCAteSBkb2NrZXItY2UKc3VkbyBkb2NrZXIgcnVuIC1kIC1wIDgwODA6ODAgdHV0dW0vaGVsbG8td29ybGQ="
     tags:

@@ -7,7 +7,7 @@ spec:
   forProvider:
     loadBalancerName: "lbu"
     subregionNames: 
-      - "eu-west-2a"
+      - "us-east-2a"
     listeners:
       - backendPort: 8080
         backendProtocol: "HTTP"

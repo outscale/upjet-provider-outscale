@@ -5,10 +5,10 @@ metadata:
   namespace: default
 spec:
   forProvider:
-    imageId: "ami-ec7ef91f"
+    imageId: "ami-bbe870d5"
     vmType: "tinav4.c1r1p2"
     keypairName: "crossplane"
-    placementSubregionName: "eu-west-2a"
+    placementSubregionName: "us-east-2a"
     placementTenancy: "default"
   providerConfigRef:
     name: default

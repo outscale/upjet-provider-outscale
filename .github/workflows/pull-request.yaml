@@ -4,7 +4,6 @@ on:
   push:
    branches:
     - main
-
 jobs:
   pull-request:
     runs-on: ubuntu-20.04
@@ -120,6 +119,13 @@ jobs:
       shell: bash
       env:
         KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
+    - name: Wait for crossplane to be ok
+      run: |
+        kubectl wait deployment/crossplane -n crossplane-system  --for=condition=Available --timeout 10m
+        kubectl wait deployment/crossplane-rbac-manager -n crossplane-system  --for=condition=Available --timeout 10m
+      shell: bash
+      env:
+        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
     - name: Create ns and set credential
       run: 
         make providerconfig
@@ -139,6 +145,11 @@ jobs:
         kubectl wait providers/upjet-provider-outscale --for=condition=Healthy --timeout 10m
       shell: bash
       env: 
+        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
+    - name: Get Kubeconfig
+      run: cat rke-cluster-for-upjet/rke/kube_config_cluster.yml
+      shell: bash
+      env:
         KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
     - name: Test Net
       run: |
@@ -229,5 +240,3 @@ jobs:
         osc_access_key: ${{ secrets.OSC_ACCESS_KEY }}
         osc_secret_key: ${{ secrets.OSC_SECRET_KEY }}
         osc_region: ${{ secrets.OSC_REGION }}
-    
-    
