@@ -7,7 +7,7 @@ metadata:
     name: vm
 spec:
   forProvider:
-    imageId: "ami-ec7ef91f"
+    imageId: "ami-bbe870d5"
     vmType: "tinav5.c4r8p1"
     keypairName: "cp-keypair"
     blockDeviceMappings: 
@@ -16,7 +16,7 @@ spec:
           - volumeSize: 60
             volumeType: "gp2"
             deleteOnVmDeletion: true      
-    placementSubregionName: "eu-west-2a"
+    placementSubregionName: "us-east-2a"
     placementTenancy: "default"
     securityGroupIdsRefs:
       - name: sg

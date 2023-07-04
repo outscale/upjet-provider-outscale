@@ -6,7 +6,7 @@ metadata:
 spec:
   forProvider:
     size: 30
-    subregionName: "eu-west-2a"
+    subregionName: "us-east-2a"
     volumeType: "gp2"
     tags:
       - key: Name
