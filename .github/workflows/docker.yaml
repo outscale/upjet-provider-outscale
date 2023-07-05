@@ -2,7 +2,8 @@ name: build-docker
 on:
   push:
    branches:
-    - main
+    tags:
+      - "v*"
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -30,11 +31,11 @@ jobs:
         docker image ls
         make docker-push
       env:
-        IMG: ${{ secrets.DOCKER_REGISTRY_REPO }}/upjet-provider-outscale:release
+        IMG: ${{ secrets.DOCKER_REGISTRY_REPO }}/upjet-provider-outscale:${{ env.RELEASE_TAG }}
     - name: Build and push
       run: |
         make docker-buildx
         make docker-push
         docker image prune -a -f
       env:
-        IMG: ${{ secrets.DOCKER_REGISTRY_REPO }}/upjet-provider-outscale:${{ github.sha }}
+        IMG: ${{ secrets.DOCKER_REGISTRY_REPO }}/upjet-provider-outscale:${{ env.RELEASE_TAG }}
