@@ -24,7 +24,7 @@ spec:
           name: cp-vm
       spec:
         forProvider:
-          imageId: "ami-ec7ef91f"
+          imageId: "ami-bbe870d5"
           vmType: "tinav4.c1r1p2"
           keypairName: "cp-keypair"
           blockDeviceMappings: 
@@ -84,7 +84,7 @@ spec:
       spec:
         forProvider:
           ipRange: "10.0.0.0/24"
-          subregionName: "eu-west-2a"
+          subregionName: "us-east-2a"
           netIdSelector: 
             matchControllerRef: true
             matchLabels:
