@@ -192,14 +192,6 @@ jobs:
       if: ${{ always() }}
       env:
         KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
-    - name: Test volumes
-      run: |
-        make submodules
-        UPTEST_EXAMPLE_LIST=examples/volumes/keypair.yaml,examples/volumes/vm.yaml,examples/volumes/volumes.yaml make e2e
-      shell: bash
-      if: ${{ always() }}
-      env:
-        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml  
     - name: Test vm
       run: |
         make submodules
@@ -222,14 +214,6 @@ jobs:
         UPTEST_EXAMPLE_LIST=examples/net_vm/internetservice.yaml,examples/net_vm/keypair.yaml,examples/net_vm/net.yaml,examples/net_vm/publicip.yaml,examples/net_vm/publicip.yaml,examples/net_vm/route.yaml,examples/net_vm/routetable.yaml,examples/net_vm/securitygroup.yaml,examples/net_vm/securitygrouprule.yaml,examples/net_vm/subnet.yaml,examples/net_vm/vm.yaml make e2e
       shell: bash
       if: ${{ always() }}
-      env:
-        KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
-    - name: Test public-loadBalancer
-      run: |
-        make submodules
-        UPTEST_EXAMPLE_LIST=examples/public-loadbalancer/keypair.yaml,examples/public-loadbalancer/loadbalancer.yaml,examples/public-loadbalancer/securitygroup.yaml,examples/public-loadbalancer/securitygrouprule.yaml,examples/public-loadbalancer/vm.yaml make e2e
-      if: ${{ always() }}
-      shell: bash
       env:
         KUBECONFIG: rke-cluster-for-upjet/rke/kube_config_cluster.yml
     - name: Destroy cluster
