@@ -21,15 +21,15 @@ inputs:
   rke_version:
     description: 'Version of rke to use'
     required: false
-    default: "v1.4.10"
+    default: "v1.5.1"
   kubernetes_version:
     description: 'Version of the kubernetes to deploy (See https://github.com/rancher/rke/releases)'
     required: false
-    default: "v1.25.13-rancher1-1"
+    default: "v1.26.11-rancher2-1"
   bastion_vm_type:
     description: 'Vm type of bastion instance'
     required: false
-    default: "tinav3.c4r8p1"
+    default: "tinav6.c4r8p2"
   bastion_volume_type:
     description: 'Volume type of bastion instance'
     required: false
